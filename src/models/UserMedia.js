@@ -1,24 +1,28 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const TrainerDetails = sequelize.define(
-    'TrainerDetails',
+const UserMedia = sequelize.define(
+    'UserMedia',
     {
         user_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        specialties: {
+        media_url: {
             type: DataTypes.STRING(255),
         },
-        available_slots: {
-            type: DataTypes.TEXT,
+        media_type: {
+            type: DataTypes.ENUM('image', 'video'),
+            allowNull: false,
+        },
+        ai_assessment: {
+            type: DataTypes.JSON,
         },
     },
     {
         timestamps: true,
-        tableName: 'TrainerDetails',
+        tableName: 'UserMedia',
     }
 );
 
-module.exports = TrainerDetails;
+module.exports = UserMedia;

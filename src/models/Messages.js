@@ -1,24 +1,25 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const TrainerDetails = sequelize.define(
-    'TrainerDetails',
+const Messages = sequelize.define(
+    'Messages',
     {
-        user_id: {
+        sender_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        specialties: {
-            type: DataTypes.STRING(255),
+        receiver_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         },
-        available_slots: {
+        message: {
             type: DataTypes.TEXT,
         },
     },
     {
         timestamps: true,
-        tableName: 'TrainerDetails',
+        tableName: 'Messages',
     }
 );
 
-module.exports = TrainerDetails;
+module.exports = Messages;
