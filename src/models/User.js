@@ -62,6 +62,16 @@ const User = sequelize.define(
         verification_token_expires_at: {
             type: DataTypes.DATE,
         },
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+          },
+          updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+          },
     },
     {
         timestamps: true,

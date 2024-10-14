@@ -1,31 +1,42 @@
-// models/ClientDetails.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
 
-const ClientDetails = sequelize.define(
-    'ClientDetails',
-    {
-        user_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        height: {
-            type: DataTypes.FLOAT,
-        },
-        weight: {
-            type: DataTypes.FLOAT,
-        },
-        body_image_url: {
-            type: DataTypes.STRING(255),
-        },
-        physical_condition: {
-            type: DataTypes.TEXT,
-        },
+const ClientDetails = sequelize.define( "ClientDetails",{
+    client_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
     },
-    {
-        timestamps: true,
-        tableName: 'ClientDetails',
-    }
+    height: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    weight: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    media_type: {
+      type: DataTypes.ENUM("image", "video"),
+      allowNull: true,
+    },
+    physical_condition: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    timestamps: true,
+    tableName: "ClientDetails",
+  }
 );
 
 module.exports = ClientDetails;

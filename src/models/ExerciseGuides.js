@@ -1,28 +1,40 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const WorkoutPlans = sequelize.define(
-    'WorkoutPlans',
-    {
+const ExerciseGuides = sequelize.define('ExerciseGuides', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-        },
-        client_id: {
-            type: DataTypes.INTEGER,
+            autoIncrement: true, 
             allowNull: false,
         },
-        trainer_id: {
-            type: DataTypes.INTEGER,
+        name: {
+            type: DataTypes.STRING(255),
             allowNull: false,
         },
         description: {
             type: DataTypes.TEXT,
             allowNull: true, 
         },
-        week_plan: {
-            type: DataTypes.JSON,  
+        muscle_group: {
+            type: DataTypes.STRING(255),
+            allowNull: true,  
+        },
+        difficulty_level: {
+            type: DataTypes.STRING(50),
             allowNull: true, 
+        },
+        video_url: {
+            type: DataTypes.STRING(255),
+            allowNull: true, 
+        },
+        image_url: {
+            type: DataTypes.STRING(255),
+            allowNull: true,  
+        },
+        admin_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -37,8 +49,8 @@ const WorkoutPlans = sequelize.define(
     },
     {
         timestamps: true,
-        tableName: 'WorkoutPlans',
+        tableName: 'ExerciseGuides',
     }
 );
 
-module.exports = WorkoutPlans;
+module.exports = ExerciseGuides;

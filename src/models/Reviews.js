@@ -1,9 +1,11 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Reviews = sequelize.define(
-    'Reviews',
-    {
+const Reviews = sequelize.define('Reviews', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+        },
         client_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -22,6 +24,17 @@ const Reviews = sequelize.define(
         },
         review: {
             type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
         },
     },
     {
