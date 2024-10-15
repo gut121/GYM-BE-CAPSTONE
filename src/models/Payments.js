@@ -2,10 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Payments = sequelize.define( 'Payments', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-        },
         client_id: {
             type: DataTypes.INTEGER,
             allowNull: false,

@@ -2,10 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const ClientSubscriptions = sequelize.define( 'ClientSubscriptions',{
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-        },
         client_id: {
             type: DataTypes.INTEGER,
             allowNull: false,

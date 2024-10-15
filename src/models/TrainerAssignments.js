@@ -4,10 +4,6 @@ const sequelize = require("../config/database");
 const TrainerAssignments = sequelize.define(
   "TrainerAssignments",
   {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-    },
     client_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -2,12 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const ExerciseGuides = sequelize.define('ExerciseGuides', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true, 
-            allowNull: false,
-        },
         name: {
             type: DataTypes.STRING(255),
             allowNull: false,

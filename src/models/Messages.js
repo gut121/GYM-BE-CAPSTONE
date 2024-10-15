@@ -2,10 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Messages = sequelize.define('Messages', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-        },
         sender_id: {
             type: DataTypes.INTEGER,
             allowNull: false,

@@ -4,10 +4,6 @@ const sequelize = require('../config/database');
 const WorkoutPlans = sequelize.define(
     'WorkoutPlans',
     {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-        },
         client_id: {
             type: DataTypes.INTEGER,
             allowNull: false,

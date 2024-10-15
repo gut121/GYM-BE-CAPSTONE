@@ -1,17 +1,16 @@
+const { Op } = require('sequelize');
 const { ExerciseGuides, User } = require('../models');
 
 class ExerciseGuidesController {
- 
+
     async createExercise(req, res) {
         try {
-            const { name, description, muscle_group, difficulty_level, video_url, image_url } = req.body;
-            const adminId = req.user.id;  
-            
+            const { name, description, muscle_group, difficulty_level, video_url, image_url} = req.body;
+            const adminId = req.user.id;
             const admin = await User.findByPk(adminId);
-            if (!admin || admin.role !== 'admin') {
-                return res.status(403).json({ error: 'Unauthorized, only admins can create exercises' });
+            if (!admin) {
+                res.status(404).json({ message: 'Admin not found' });
             }
-
             const exercise = await ExerciseGuides.create({
                 name,
                 description,
@@ -19,85 +18,64 @@ class ExerciseGuidesController {
                 difficulty_level,
                 video_url,
                 image_url,
-                created_by: adminId, 
+                admin_id: adminId,
             });
+            res.status(201).json(exercise);
 
-            res.status(201).json({ exercise });
         } catch (error) {
-            console.error('Error creating exercise:', error);
-            res.status(500).json({ error: 'Failed to create exercise' });
+            res.status(500).json({ message: 'Failed to create exercise', error });
         }
+
     }
 
-    
     async getExercises(req, res) {
         try {
-            const exercises = await ExerciseGuides.findAll();
+            const exercises = await ExerciseGuides.findAll(
+                {
+                    attributes: ['id', 'name', 'description', 'muscle_group', 'difficulty_level', 'video_url', 'image_url'],
+                }
+            );
             res.status(200).json(exercises);
         } catch (error) {
             console.error('Error retrieving exercises:', error);
             res.status(500).json({ error: 'Failed to retrieve exercises' });
         }
     }
-
-  
-    async updateExercise(req, res) {
+    async getExercisesByNames(req, res) {
         try {
-            const { id } = req.params;
-            const { name, description, muscle_group, difficulty_level, video_url, image_url } = req.body;
-            const adminId = req.user.id;  
+            const { names } = req.query;
 
-         
-            const admin = await User.findByPk(adminId);
-            if (!admin || admin.role !== 'admin') {
-                return res.status(403).json({ error: 'Unauthorized, only admins can update exercises' });
+            if (!names) {
+                return res.status(400).json({ error: 'Tên bài tập không được bỏ trống' });
             }
 
-            const exercise = await ExerciseGuides.findByPk(id);
-            if (!exercise) {
-                return res.status(404).json({ error: 'Exercise not found' });
+            // Tách các tên bài tập dựa trên dấu phẩy hoặc khoảng trắng
+            const nameArray = names.split(',').map(name => name.trim());
+
+            const exercises = await ExerciseGuides.findAll(
+                {
+                    where: {
+                        name: {
+                            [Op.or]: nameArray.map(name => ({
+                                [Op.like]: `%${name}%`
+                            }))
+                        }
+                    },
+                    attributes: ['id', 'name', 'description', 'muscle_group', 'difficulty_level', 'video_url', 'image_url'],
+                }
+            );
+
+            if (exercises.length === 0) {
+                return res.status(404).json({ error: 'Không tìm thấy bài tập nào phù hợp' });
             }
 
-       
-            exercise.name = name || exercise.name;
-            exercise.description = description || exercise.description;
-            exercise.muscle_group = muscle_group || exercise.muscle_group;
-            exercise.difficulty_level = difficulty_level || exercise.difficulty_level;
-            exercise.video_url = video_url || exercise.video_url;
-            exercise.image_url = image_url || exercise.image_url;
-
-            await exercise.save();
-            res.status(200).json({ exercise });
+            res.status(200).json(exercises);
         } catch (error) {
-            console.error('Error updating exercise:', error);
-            res.status(500).json({ error: 'Failed to update exercise' });
+            console.error('Error retrieving exercises by names:', error);
+            res.status(500).json({ error: 'Failed to retrieve exercises' });
         }
     }
 
-  
-    async deleteExercise(req, res) {
-        try {
-            const { id } = req.params;
-            const adminId = req.user.id;  
-
-           
-            const admin = await User.findByPk(adminId);
-            if (!admin || admin.role !== 'admin') {
-                return res.status(403).json({ error: 'Unauthorized, only admins can delete exercises' });
-            }
-
-            const exercise = await ExerciseGuides.findByPk(id);
-            if (!exercise) {
-                return res.status(404).json({ error: 'Exercise not found' });
-            }
-
-            await exercise.destroy();
-            res.status(200).json({ message: 'Exercise deleted successfully' });
-        } catch (error) {
-            console.error('Error deleting exercise:', error);
-            res.status(500).json({ error: 'Failed to delete exercise' });
-        }
-    }
 }
 
-module.exports = new ExerciseController();
+module.exports = new ExerciseGuidesController();

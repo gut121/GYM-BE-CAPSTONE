@@ -2,10 +2,9 @@ const express = require('express');
 const ExerciseGuidesController = require('../controllers/ExerciseGuidesController');
 const router = express.Router();
 
+router.get('/search', ExerciseGuidesController.getExercisesByNames);
 
-router.post('/', ExerciseGuidesController.createExercise);
 router.get('/', ExerciseGuidesController.getExercises);
-router.put('/:id', ExerciseGuidesController.updateExercise);
-router.delete('/:id', ExerciseGuidesController.deleteExercise);
+router.post('/create', ExerciseGuidesController.createExercise)
 
 module.exports = router;

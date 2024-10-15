@@ -2,10 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Notifications = sequelize.define('Notifications',{
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-        },
         user_id: {
             type: DataTypes.INTEGER,
             allowNull: false,

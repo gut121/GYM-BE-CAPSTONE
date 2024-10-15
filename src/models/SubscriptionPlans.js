@@ -4,10 +4,6 @@ const sequelize = require("../config/database");
 const SubscriptionPlans = sequelize.define(
   "SubscriptionPlans",
   {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-    },
     plan_name: {
       type: DataTypes.STRING(255),
       allowNull: false,
