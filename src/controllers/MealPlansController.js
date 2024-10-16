@@ -40,10 +40,10 @@ class MealPlansController {
                     },
                 ]
             });
-            if (!mealPlan) return res.status(404).json({ Message: "Meal Plan Not Found" });
+            if (!mealPlan) return res.status(404).json({ success: false, Message: "Meal Plan Not Found" });
             res.status(200).json({ success: true, data: mealPlan });
         } catch (error) {
-            res.status(500).json({ Message: "Internal Server Error" });
+            res.status(500).json({success: false, Message: "Internal Server Error" });
 
         }
     }

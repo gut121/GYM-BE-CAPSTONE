@@ -9,7 +9,7 @@ class ExerciseGuidesController {
             const adminId = req.user.id;
             const admin = await User.findByPk(adminId);
             if (!admin) {
-                res.status(404).json({ message: 'Admin not found' });
+                res.status(404).json({success: false, message: 'Admin not found' });
             }
             const exercise = await ExerciseGuides.create({
                 name,
@@ -20,9 +20,10 @@ class ExerciseGuidesController {
                 image_url,
                 admin_id: adminId,
             });
-            res.status(201).json(exercise);
+            res.status(200).json({success: true, data : Exercises});
 
         } catch (error) {
+            console.error('Error creating exercise:', error);
             res.status(500).json({ message: 'Failed to create exercise', error });
         }
 
@@ -35,7 +36,7 @@ class ExerciseGuidesController {
                     attributes: ['id', 'name', 'description', 'muscle_group', 'difficulty_level', 'video_url', 'image_url'],
                 }
             );
-            res.status(200).json(exercises);
+            res.status(200).json({success: true, data : Exercises});
         } catch (error) {
             console.error('Error retrieving exercises:', error);
             res.status(500).json({ error: 'Failed to retrieve exercises' });
@@ -49,7 +50,6 @@ class ExerciseGuidesController {
                 return res.status(400).json({ error: 'Tên bài tập không được bỏ trống' });
             }
 
-            // Tách các tên bài tập dựa trên dấu phẩy hoặc khoảng trắng
             const nameArray = names.split(',').map(name => name.trim());
 
             const exercises = await ExerciseGuides.findAll(
@@ -69,7 +69,7 @@ class ExerciseGuidesController {
                 return res.status(404).json({ error: 'Không tìm thấy bài tập nào phù hợp' });
             }
 
-            res.status(200).json(exercises);
+            res.status(200).json({success: true, data : Exercises});
         } catch (error) {
             console.error('Error retrieving exercises by names:', error);
             res.status(500).json({ error: 'Failed to retrieve exercises' });

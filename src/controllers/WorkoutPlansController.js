@@ -19,6 +19,7 @@ class WorkoutPlansController {
             });
             res.status(200).json({ success: true, data: workoutPlans });
         } catch (error) {
+            conslog.error("error getting workout plans", error)
             res.status(500).json({ message: error.message });
         }
     }
@@ -46,6 +47,7 @@ class WorkoutPlansController {
             res.status(200).json({ success: true, data: workoutPlan });
 
         } catch (error) {
+            conslog.error("error getting workout plan", error)
             res.status(500).json({ message: error.message });
         }
     }

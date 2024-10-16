@@ -12,7 +12,8 @@ class UserController {
             user.avatar_url = newAvatar;
             await user.save();
             res.status(200).json({ message: 'Avatar updated successfully' });
-        } catch (err) {
+        } catch (error) {
+            console.error("Error occured while updating avatar:", error);
             res.status(500).json({ message: 'Failed to update avatar' });
         }
     }
