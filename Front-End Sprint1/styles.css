@@ -1,0 +1,49 @@
+/* styles.css */
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin: 16px 0;
+    height: 100%; /* Ensure the card takes the full height of its container */
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ensure the calendar takes the remaining space in the card */
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f7f7f7;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.day {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+}
+
+.calendar-body {
+    display: flex;
+    justify-content: space-between;
+    flex: 1; /* Ensure the calendar body takes the remaining space in the calendar */
+}
+
+.day-content {
+    flex: 1;
+    text-align: center;
+    padding: 16px;
+    border-right: 1px solid #ddd;
+    overflow: auto; /* Ensure content is scrollable if it overflows */
+}
+
+.day-content:last-child {
+    border-right: none;
+}
