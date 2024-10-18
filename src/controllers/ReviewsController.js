@@ -9,8 +9,18 @@ class ReviewsController {
         } catch (error) {
             console.error("error getting reviews", error);
             res.status(500).json({ success: false, data: error.message });
-
+        }
+    }
+    async getReviewsByUserId(req, res) {
+        const { userId } = req.params;
+        try {
+            const reviews = await Reviews.findAll({ where: { userId } });
+            res.status(200).json({ success: true, data: reviews });
+        }
+        catch (error) {
+            console.error("error getting reviews by user", error);
+            res.status(500).json({ success: false, data: error.message });
         }
     }
 }
-module.exports = ReviewsController;
+module.exports = new ReviewsController;

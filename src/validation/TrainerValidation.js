@@ -1,6 +1,7 @@
-const{body,param, query} = require('express-validator');
-const WorkoutPlansValidation = {
-    getWorkoutPlanById : [
+const { body, param, query } = require('express-validator');
+
+const TrainerValidation = {
+    getTrainerById: [
         param('id')
             .notEmpty()
             .withMessage('id is required')
@@ -8,5 +9,4 @@ const WorkoutPlansValidation = {
             .withMessage('id must be an integer')
     ]
 }
-
-module.exports = WorkoutPlansValidation;
+module.exports = TrainerValidation;

@@ -3,8 +3,7 @@ const ExerciseGuidesController = require('../controllers/ExerciseGuidesControlle
 const router = express.Router();
 
 router.get('/search', ExerciseGuidesController.getExercisesByNames);
-
-router.get('/', ExerciseGuidesController.getExercises);
+router.get('/',ExerciseGuidesController.getExercises);
 router.post('/create', ExerciseGuidesController.createExercise)
 
 module.exports = router;

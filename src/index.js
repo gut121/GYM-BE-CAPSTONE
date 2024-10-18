@@ -1,5 +1,7 @@
 const { sequelize, MealPlans } = require('./models');
 const express = require('express');
+const cors = require('cors');
+const { corsOptions } = require('./utils/corsOptions');
 const PORT = process.env.PORT || 4000;
 const TrainerRoutes = require('./routes/TrainerRoutes');
 const ClientRoutes = require('./routes/ClientRoutes');
@@ -14,6 +16,7 @@ const morgan = require('morgan');
 
 const app = express();
 
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use('/api/auth', AuthRoutes);
@@ -21,10 +24,11 @@ app.use('/api/clients', ClientRoutes);
 app.use('/api/trainers', TrainerRoutes);
 app.use('/api/exercises', ExerciseGuidesRoutes);
 app.use('/api/sessions', SessionsRoutes);
-app.use('/api/session-exercises', SessionExercisesRoutes);
+app.use('/api/sessions-exercises', SessionExercisesRoutes);
 app.use('/api/workout-plans', WorkoutPlansRoutes);
 app.use('/api/meal-plans',MealPlansRoutes); 
 app.use('/api/weekly-schedules', WeeklySchedulesRoutes); 
+
 sequelize
     .sync()
     .then(() => {

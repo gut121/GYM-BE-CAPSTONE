@@ -118,13 +118,15 @@ class AuthController {
                     .json({ error: 'Invalid credentials' });
             }
             const token = generateToken(user.id, user.role);
-            generateRefreshTokenAndSetCookie(res, user.id);
+            const refreshToken = generateRefreshTokenAndSetCookie(res, user.id);
 
             user.lastLogin = new Date();
             await user.save();
             res.json({
                 message: 'Logged in successfully',
                 token,
+                refreshToken,
+                user: user
             });
         } catch (error) {
             console.error('Error logging in: ', error);
@@ -234,11 +236,15 @@ class AuthController {
         const refreshToken = req.cookies
             ? req.cookies.refreshToken
             : null;
-        if (!refreshToken)
+    
+        console.log("Refresh Token from cookie:", refreshToken); // Thêm câu lệnh này để debug
+    
+        if (!refreshToken) {
             return res
                 .status(401)
                 .json({ error: 'No refresh token' });
-
+        }
+    
         try {
             const decoded = jwt.verify(
                 refreshToken,
@@ -260,6 +266,7 @@ class AuthController {
             });
         }
     }
+    
 }
 
 module.exports = new AuthController();
