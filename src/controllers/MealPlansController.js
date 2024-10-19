@@ -1,22 +1,25 @@
-const { Message } = require("twilio/lib/twiml/MessagingResponse");
 const { MealPlans, User } = require("../models");
 
 class MealPlansController {
     async getMealPlans(req, res) {
         try {
-            const MealPlans = await MealPlans.findAll();
-            include: [
+            const MealPlans = await MealPlans.findAll(
                 {
-                    model: User,
-                    as: 'client',
-                    attributes: ["id", "username"]
-                },
-                {
-                    model: User,
-                    as: 'trainer',
-                    attributes: ["id", "username"]
-                },
-            ]
+                    include: [
+                        {
+                            model: User,
+                            as: 'client',
+                            attributes: ["id", "username"]
+                        },
+                        {
+                            model: User,
+                            as: 'trainer',
+                            attributes: ["id", "username"]
+                        },
+                    ]
+                }
+            );
+
             res.status(200).json({ success: true, data: workoutPlans });
         } catch (error) {
             res.status(500).json({ Message: "Internal Server Error" });
@@ -43,7 +46,7 @@ class MealPlansController {
             if (!mealPlan) return res.status(404).json({ success: false, Message: "Meal Plan Not Found" });
             res.status(200).json({ success: true, data: mealPlan });
         } catch (error) {
-            res.status(500).json({success: false, Message: "Internal Server Error" });
+            res.status(500).json({ success: false, Message: "Internal Server Error" });
 
         }
     }

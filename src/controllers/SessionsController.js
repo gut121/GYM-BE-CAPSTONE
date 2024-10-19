@@ -1,11 +1,11 @@
-const { Sessions, User,} = require('../models');
+const { Sessions, User, } = require('../models');
 
 class SessionsController {
 
     async createSession(req, res) {
         const transaction = await sequelize.transaction();
         try {
-            const {client_id, trainer_id, session_date, status } = req.body;
+            const { client_id, trainer_id, session_date, status } = req.body;
             const trainer = await User.findByPk(trainer_id);
             if (!trainer || trainer.role !== 'trainer') {
                 return res.status(403).json({ error: 'Only trainers can create sessions' });
@@ -15,15 +15,15 @@ class SessionsController {
                 client_id,
                 trainer_id,
                 session_date,
-                status: status || 'pending',  
+                status: status || 'pending',
             }, { transaction });
 
-            
+
             await transaction.commit();
 
             res.status(201).json({ session });
         } catch (error) {
-            
+
             await transaction.rollback();
             console.error('Error creating session:', error);
             res.status(500).json({ error: 'Failed to create session' });
@@ -42,6 +42,25 @@ class SessionsController {
         } catch (error) {
             console.error('Error fetching sessions:', error);
             res.status(500).json({ error: 'Failed to retrieve sessions' });
+        }
+    }
+
+    async getSessionById(req, res) {
+        try {
+            const { id } = req.params;
+            const session = await Sessions.findByPk(id, {
+                include: [
+                    { model: User, as: 'Client', attributes: ['id', 'name'] },
+                    { model: User, as: 'Trainer', attributes: ['id', 'name'] },
+                ],
+            });
+            if (!session) {
+                return res.status(404).json({ error: 'Session not found' });
+            }
+            res.status(200).json(session);
+        } catch (error) {
+            console.error('Error fetching session:', error);
+            res.status(500).json({ error: 'Failed to retrieve session' });
         }
     }
 
