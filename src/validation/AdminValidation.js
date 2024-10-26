@@ -1,6 +1,6 @@
-const { body, param, query } = require('express-validator');
+const { body, param, query } = require('express-validator')
 
-const TrainerValidation = {
+const AdminValidation = {
     register: [
         body('username')
             .notEmpty().withMessage('Username is required')
@@ -12,13 +12,6 @@ const TrainerValidation = {
             .notEmpty().withMessage('Email is required')
             .isEmail().withMessage('Invalid email '),
     ],
-
-    getTrainerById: [
-        param('id')
-            .notEmpty()
-            .withMessage('id is required')
-            .isInt()
-            .withMessage('id must be an integer')
-    ]
 }
-module.exports = TrainerValidation;
+
+module.exports = AdminValidation;

@@ -1,11 +1,11 @@
 const express = require('express');
-const SessionExercisesController = require('../controllers/SessionExercisesController');
-const SessionsExercisesValidation = require('../validation/SessionExercisesValidation');
+const {SessionExercisesController} = require('../controllers');
+const {SessionExercisesValidation} = require('../validation');
 const router = express.Router();
 
 
 router.get('/', SessionExercisesController.getAllSessionExercises);
-router.get('/:id',SessionsExercisesValidation.getSessionsExercisesById, SessionExercisesController.getSessionExercisesBySessionId);
+router.get('/:id',SessionExercisesValidation.getSessionsExercisesById, SessionExercisesController.getSessionsExercisesById);
 
 
 module.exports = router;

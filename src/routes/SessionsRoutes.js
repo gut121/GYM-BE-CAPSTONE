@@ -1,10 +1,10 @@
 const express = require('express');
-const SessionsController = require('../controllers/SessionsController');
-const SessionsValidation = require('../validation/SessionsValidation');
+const {SessionsController} = require('../controllers');
+const {SessionsValidation} = require('../validation');
 const router = express.Router();
 
-router.post('/sessions',SessionsValidation.createSession, SessionsController.createSession);
-router.get('/sessions', SessionsController.getSessions);
+router.post('/create',SessionsValidation.createSession, SessionsController.createSession);
+router.get('/',SessionsController.getSessions);
 router.get('/:id',SessionsValidation.getSessionById ,SessionsController.getSessionById);
 router.put('/sessions/:id', SessionsController.updateSession);
 router.delete('/sessions/:id', SessionsController.deleteSession);

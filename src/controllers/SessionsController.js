@@ -33,9 +33,10 @@ class SessionsController {
     async getSessions(req, res) {
         try {
             const sessions = await Sessions.findAll({
+                attributes: ['id', 'session_date', 'status', 'createdAt', 'updatedAt'],  // Thêm status và các trường cần thiết khác
                 include: [
-                    { model: User, as: 'Client', attributes: ['id', 'name'] },
-                    { model: User, as: 'Trainer', attributes: ['id', 'name'] },
+                    { model: User, as: 'client', attributes: ['id', 'username'] },
+                    { model: User, as: 'trainer', attributes: ['id', 'username']},
                 ],
             });
             res.status(200).json(sessions);
@@ -44,14 +45,14 @@ class SessionsController {
             res.status(500).json({ error: 'Failed to retrieve sessions' });
         }
     }
-
+    
     async getSessionById(req, res) {
         try {
             const { id } = req.params;
             const session = await Sessions.findByPk(id, {
                 include: [
-                    { model: User, as: 'Client', attributes: ['id', 'name'] },
-                    { model: User, as: 'Trainer', attributes: ['id', 'name'] },
+                    { model: User, as: 'client', attributes: ['id', 'username'] },
+                    { model: User, as: 'trainer', attributes: ['id', 'username'] },
                 ],
             });
             if (!session) {

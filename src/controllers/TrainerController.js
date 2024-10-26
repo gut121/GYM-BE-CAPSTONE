@@ -1,4 +1,8 @@
 const { User, TrainerDetails } = require("../models");
+const { Op } = require('sequelize');
+const bcrypt = require('bcrypt');
+const { generateRefreshTokenAndSetCookie } = require('../utils/generateToken');
+const { sendVerificationEmail } = require('../mail/emails');
 
 class TrainerController {
 

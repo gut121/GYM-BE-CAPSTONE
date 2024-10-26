@@ -1,6 +1,6 @@
 const { Sessions, ExerciseGuides, SessionExercises } = require('../models');
 class SessionExercisesController {
-    async getAllSessionExercises(req, res) {
+    async getAllSessionExercises (req, res) {
         try {
             const sessions = await Sessions.findAll({
                 include: [
@@ -17,11 +17,10 @@ class SessionExercisesController {
         }
     }
 
-    async getSessionExercisesBySessionId(req, res) {
-        const { sessionId } = req.params;
+    async getSessionsExercisesById(req, res) {
+        const { id } = req.params;
         try {
-            const session = await Sessions.findOne({
-                where: { id: sessionId },
+            const session = await Sessions.findByPk(id,{
                 include: [
                     {
                         model: ExerciseGuides,

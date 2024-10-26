@@ -4,17 +4,7 @@ const cors = require('cors');
 const createError = require('http-errors')
 const { corsOptions } = require('./utils/corsOptions');
 const PORT = process.env.PORT || 4000;
-const TrainerRoutes = require('./routes/TrainerRoutes');
-const ClientRoutes = require('./routes/ClientRoutes');
-const AuthRoutes = require('./routes/AuthRoutes');
-const ExerciseGuidesRoutes = require('./routes/ExerciseGuidesRoutes');
-const SessionsRoutes = require('./routes/SessionsRoutes');
-const SessionExercisesRoutes = require('./routes/SessionExercisesRoutes');
-const WorkoutPlansRoutes = require('./routes/WorkoutPlansRoutes');
-const MealPlansRoutes = require('./routes/MealPlansRoutes');
-const WeeklySchedulesRoutes = require('./routes/WeeklySchedulesRoutes');
-const ReviewRoutes = require('./routes/ReviewsRoutes');
-const AdminRoutes = require('./routes/AdminRoutes');
+const {AuthRoutes,AdminRoutes,ClientRoutes,TrainerRoutes,ExerciseGuidesRoutes,SessionsRoutes,SessionExercisesRoutes,WorkoutPlansRoutes,MealPlansRoutes,ReviewsRoutes} = require('./routes');
 const morgan = require('morgan');
 const { limiter } = require('./utils/rateLimiter');
 
@@ -32,8 +22,7 @@ app.use('/api/sessions', SessionsRoutes);
 app.use('/api/sessions-exercises', SessionExercisesRoutes);
 app.use('/api/workout-plans', WorkoutPlansRoutes);
 app.use('/api/meal-plans', MealPlansRoutes);
-app.use('/api/weekly-schedules', WeeklySchedulesRoutes);
-app.use('/api/reviews', ReviewRoutes);
+app.use('/api/reviews', ReviewsRoutes);
 app.use('/api/admin', AdminRoutes);
 
 

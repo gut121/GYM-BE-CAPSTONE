@@ -1,6 +1,6 @@
 const express = require('express');
-const ReviewsController = require('../controllers/ReviewsController');
-const ReviewsValidation = require('../validation/ReviewsValidation');
+const {ReviewsController} = require('../controllers');
+const {ReviewsValidation} = require('../validation');
 const router = express.Router();
 
 router.get('/', ReviewsController.getReviewsAll);
