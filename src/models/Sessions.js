@@ -7,20 +7,28 @@ const Sessions = sequelize.define(
         client_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            onDelete: 'CASCADE', 
+            onDelete: 'CASCADE',
         },
         trainer_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            onDelete: 'CASCADE',  
+            onDelete: 'CASCADE',
         },
         session_date: {
             type: DataTypes.DATE,
-            allowNull: true, 
+            allowNull: true,
         },
         status: {
             type: DataTypes.ENUM('pending', 'completed', 'cancelled'),
             defaultValue: 'pending',
+            incomplete_reason: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
+            incomplete_reason: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
         },
         createdAt: {
             type: DataTypes.DATE,
