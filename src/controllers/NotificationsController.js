@@ -84,31 +84,69 @@ class NotificationsController {
             console.error("Error sending session reminder:", error);
         }
     }
-
-    async sendWeeklySummary(userId) {
-        try {
-            const user = await User.findByPk(userId);
-            if (!user) {
-                console.error("User not found");
-                return;
-            }
-    
-            // Giả sử có logic để tính toán số buổi đã hoàn thành và buổi bị hủy
-            const completedSessions = 5; // Ví dụ: lấy từ database
-            const canceledSessions = 1; // Ví dụ: lấy từ database
-    
-            const content = `Tổng kết tuần: Bạn đã hoàn thành ${completedSessions} buổi tập và hủy ${canceledSessions} buổi. Hãy tiếp tục nỗ lực nhé!`;
-            await Notifications.create({
-                user_id: user.id,
-                content,
-                read_status: false
-            });
-    
-            console.log("Weekly summary sent successfully.");
-        } catch (error) {
-            console.error("Error sending weekly summary:", error);
+//Gửi thông báo tổng kết hiệu suất của khách hàng hàng tuần:const { Op } = require('sequelize'); // Import Sequelize operators
+async sendWeeklySummary(userId) {
+    try {
+        // Tìm kiếm người dùng dựa trên userId
+        const user = await User.findByPk(userId);
+        if (!user) {
+            console.error("User not found");
+            return;
         }
+
+        // Kiểm tra nếu vai trò của người dùng không phải là 'client', không gửi thông báo
+        if (user.role !== 'client') {
+            console.log("User is not a client, no summary will be sent.");
+            return;
+        }
+
+        // Xác định khoảng thời gian của tuần hiện tại
+        const startOfWeek = new Date();
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Đặt về ngày đầu tuần (Chủ nhật)
+        startOfWeek.setHours(0, 0, 0, 0); // Đặt giờ về 0:00:00
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6); // Đặt ngày cuối tuần (Thứ Bảy)
+        endOfWeek.setHours(23, 59, 59, 999); // Đặt giờ về 23:59:59
+
+        // Lấy số buổi đã hoàn thành của người dùng trong tuần
+        const completedSessionsCount = await Sessions.count({
+            where: {
+                client_id: user.id,
+                status: 'completed',
+                session_date: {
+                    [Op.between]: [startOfWeek, endOfWeek] // Trong khoảng thời gian của tuần
+                }
+            }
+        });
+
+        // Lấy số buổi bị hủy của người dùng trong tuần
+        const canceledSessionsCount = await Sessions.count({
+            where: {
+                client_id: user.id,
+                status: 'canceled',
+                session_date: {
+                    [Op.between]: [startOfWeek, endOfWeek] // Trong khoảng thời gian của tuần
+                }
+            }
+        });
+
+        // Tạo nội dung thông báo dựa trên dữ liệu tính toán
+        const content = `Tổng kết tuần: Bạn đã hoàn thành ${completedSessionsCount} buổi tập và hủy ${canceledSessionsCount} buổi. Hãy tiếp tục nỗ lực nhé để đạt được kết quả tốt nhất !`;
+        
+        // Tạo một thông báo mới trong bảng Notifications với nội dung đã tạo
+        await Notifications.create({
+            user_id: user.id,
+            content,
+            read_status: false
+        });
+
+        console.log("Weekly summary sent successfully.");
+    } catch (error) {
+        console.error("Error sending weekly summary:", error);
     }
+}
+
     // Tạo thông báo sau khi buổi tập hoàn thành
     async sendNotificationAfterSessionCompletion(sessionId) {
         try {
@@ -126,7 +164,6 @@ class NotificationsController {
                 console.error("Session not found or not completed");
                 return;
             }
-            E
 
             const content = `Chúc mừng! Bạn đã hoàn thành buổi tập.`;
             await Notifications.create({

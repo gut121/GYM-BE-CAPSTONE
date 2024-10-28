@@ -64,7 +64,15 @@ class SessionsController {
             res.status(500).json({ error: 'Failed to retrieve session' });
         }
     }
-
+    async getSessionSummary(req, res) {
+        try {
+            const { id } = req.params;
+            
+        } catch (error) {
+            console.error('Error fetching session summary:', error);
+            res.status(500).json({ error: 'Failed to retrieve session summary' });
+        }
+    }
     async updateSession(req, res) {
         try {
             const { id } = req.params;
