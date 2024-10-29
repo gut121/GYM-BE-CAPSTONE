@@ -73,6 +73,9 @@ User.hasMany(Payments, { foreignKey: "client_id", as: "clientPayments" });
 User.hasMany(Payments, { foreignKey: "trainer_id", as: "trainerPayments" });
 Payments.belongsTo(User, { foreignKey: "client_id", as: "client" });
 Payments.belongsTo(User, { foreignKey: "trainer_id", as: "trainer" });
+// Thiết lập quan hệ giữa WorkoutPlans và Sessions
+WorkoutPlans.hasMany(Sessions, { foreignKey: 'workout_plan_id', as: 'sessions' });
+Sessions.belongsTo(WorkoutPlans, { foreignKey: 'workout_plan_id', as: 'workoutPlan' });
 
 
 module.exports = {

@@ -1,4 +1,4 @@
-const { WorkoutPlans, User } = require("../models");
+const { WorkoutPlans, User, Sessions } = require("../models");
 const sequelize = require('../config/database');
 
 class WorkoutPlansController {
@@ -7,14 +7,9 @@ class WorkoutPlansController {
             const workoutPlans = await WorkoutPlans.findAll({
                 include: [
                     {
-                        model: User,
-                        as: 'client',
-                        attributes: ["id", "name"]
-                    },
-                    {
-                        model: User,
-                        as: 'trainer',
-                        attributes: ["id", "name"]
+                        model: Sessions,
+                        as: 'sessions',
+                        attributes: ["workout_plan_id", "session_date", "status", "incomplete_reason", "day_of_week", "createdAt"]
                     },
                 ]
             });
@@ -78,7 +73,7 @@ class WorkoutPlansController {
     async updateWorkoutPlan(req, res) {
         const { id } = req.params;
         const { description, week_number, day_of_week } = req.body;
-        
+
         if (!description && !week_number && !day_of_week) {
             return res.status(400).json({ message: "Please provide description, week_number, or day_of_week to update." });
         }

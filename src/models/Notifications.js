@@ -1,11 +1,12 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Notifications = sequelize.define('Notifications',{
+const Notifications = sequelize.define(
+    'Notifications',
+    {
         user_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-          
         },
         content: {
             type: DataTypes.TEXT,
@@ -16,15 +17,10 @@ const Notifications = sequelize.define('Notifications',{
             allowNull: false,
             defaultValue: false,
         },
-        createdAt: {
-            type: DataTypes.DATE,
+        notification_type: {
+            type: DataTypes.ENUM('weekly_summary', 'reminder', 'system'),
             allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
+            defaultValue: 'system',
         },
     },
     {

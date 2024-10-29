@@ -66,13 +66,52 @@ class SessionsController {
     }
     async getSessionSummary(req, res) {
         try {
-            const { id } = req.params;
-            
+            const { clientId } = req.params;
+
+            // Xác định khoảng thời gian của tuần hiện tại
+            const startOfWeek = new Date();
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+
+            // Lấy số buổi đã hoàn thành
+            const completedSessionsCount = await Sessions.count({
+                where: {
+                    client_id: clientId,
+                    status: 'completed',
+                    session_date: {
+                        [Op.between]: [startOfWeek, endOfWeek]
+                    }
+                }
+            });
+
+            // Lấy số buổi bị hủy
+            const canceledSessionsCount = await Sessions.count({
+                where: {
+                    client_id: clientId,
+                    status: 'canceled',
+                    session_date: {
+                        [Op.between]: [startOfWeek, endOfWeek]
+                    }
+                }
+            });
+
+            // Trả về số liệu tổng kết
+            res.status(200).json({
+                completedSessionsCount,
+                canceledSessionsCount
+            });
+
         } catch (error) {
             console.error('Error fetching session summary:', error);
             res.status(500).json({ error: 'Failed to retrieve session summary' });
         }
     }
+
+
     async updateSession(req, res) {
         try {
             const { id } = req.params;

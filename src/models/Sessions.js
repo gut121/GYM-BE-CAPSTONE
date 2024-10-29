@@ -7,12 +7,14 @@ const Sessions = sequelize.define(
         client_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            onDelete: 'CASCADE',
         },
         trainer_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            onDelete: 'CASCADE',
+        },
+        workout_plan_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         },
         session_date: {
             type: DataTypes.DATE,
@@ -21,24 +23,14 @@ const Sessions = sequelize.define(
         status: {
             type: DataTypes.ENUM('pending', 'completed', 'cancelled'),
             defaultValue: 'pending',
-            incomplete_reason: {
-                type: DataTypes.TEXT,
-                allowNull: true,
-            },
-            incomplete_reason: {
-                type: DataTypes.TEXT,
-                allowNull: true,
-            },
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
+        incomplete_reason: {
+            type: DataTypes.TEXT,
+            allowNull: true,
         },
-        updatedAt: {
-            type: DataTypes.DATE,
+        day_of_week: {
+            type: DataTypes.ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
             allowNull: false,
-            defaultValue: DataTypes.NOW,
         },
     },
     {

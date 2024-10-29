@@ -128,9 +128,37 @@ async function sendResetSuccessEmail(email) {
     );
 }
 
+async function sendWeeklyNotificationEmail(email, content) {
+    transporter.sendMail(
+        {
+            to: email,
+            subject: 'Thông báo Tổng kết Tuần từ Gym-Cap',
+            html: `<p>${content}</p>`,
+        },
+        function (error, info) {
+            if (error) {
+                console.error(
+                    'Error sending password reset success email',
+                    error
+                );
+                throw new Error(
+                    'Error sending password reset success email: ' +
+                    error.message
+                );
+            } else {
+                console.log(
+                    'Password reset success email sent successfully',
+                    info
+                );
+            }
+        }
+    );
+}
+
 module.exports = {
     sendVerificationEmail,
     sendWelcomeEmail,
     sendPasswordResetEmail,
     sendResetSuccessEmail,
+    sendWeeklyNotificationEmail
 };
