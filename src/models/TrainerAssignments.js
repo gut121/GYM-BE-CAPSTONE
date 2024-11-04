@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
 const TrainerAssignments = sequelize.define(
-  "TrainerAssignments",
+  'TrainerAssignments',
   {
     client_id: {
       type: DataTypes.INTEGER,
@@ -29,7 +29,7 @@ const TrainerAssignments = sequelize.define(
   },
   {
     timestamps: true,
-    tableName: "TrainerAssignments",
+    tableName: 'TrainerAssignments',
   }
 );
 

@@ -10,18 +10,17 @@ const ReviewsController = require('./ReviewsController');
 const ExerciseGuidesController = require('./ExerciseGuidesController');
 const SessionExercisesController = require('./SessionExercisesController');
 
-
 // Export các controller để sử dụng ở nơi khác trong ứng dụng
 module.exports = {
-    AuthController,
-    AdminController,
-    UserController,
-    ClientController,
-    TrainerController,
-    SessionsController,
-    WorkoutPlansController,
-    MealPlansController,
-    ReviewsController,
-    ExerciseGuidesController,
-    SessionExercisesController,
+  AuthController,
+  AdminController,
+  UserController,
+  ClientController,
+  TrainerController,
+  SessionsController,
+  WorkoutPlansController,
+  MealPlansController,
+  ReviewsController,
+  ExerciseGuidesController,
+  SessionExercisesController,
 };

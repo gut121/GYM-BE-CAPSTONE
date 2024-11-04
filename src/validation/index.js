@@ -1,4 +1,3 @@
-
 const AuthValidation = require('./AuthValidation');
 const AdminValidation = require('./AdminValidation');
 const UserValidation = require('./UserValidation');
@@ -12,15 +11,15 @@ const ExerciseGuidesValidation = require('./ExerciseGuidesValidation');
 const SessionExercisesValidation = require('./SessionExercisesValidation');
 
 module.exports = {
-    AuthValidation,
-    AdminValidation,
-    UserValidation,
-    ClientValidation,
-    TrainerValidation,
-    SessionsValidation,
-    WorkoutPlansValidation,
-    MealPlansValidation,
-    ReviewsValidation,
-    ExerciseGuidesValidation,
-    SessionExercisesValidation,
+  AuthValidation,
+  AdminValidation,
+  UserValidation,
+  ClientValidation,
+  TrainerValidation,
+  SessionsValidation,
+  WorkoutPlansValidation,
+  MealPlansValidation,
+  ReviewsValidation,
+  ExerciseGuidesValidation,
+  SessionExercisesValidation,
 };

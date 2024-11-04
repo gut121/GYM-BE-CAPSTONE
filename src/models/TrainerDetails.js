@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
 const TrainerDetails = sequelize.define(
-  "TrainerDetails",
+  'TrainerDetails',
   {
     specialties: {
       type: DataTypes.STRING(255),
@@ -28,7 +28,7 @@ const TrainerDetails = sequelize.define(
   },
   {
     timestamps: true,
-    tableName: "TrainerDetails",
+    tableName: 'TrainerDetails',
   }
 );
 

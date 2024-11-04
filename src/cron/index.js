@@ -1,6 +1,6 @@
-const { generateWeeklySummaryNotifications } = require("./Cronjobs");
+const { generateWeeklySummaryNotifications } = require('./Cronjobs');
 
 (async () => {
-    await generateWeeklySummaryNotifications();
-    console.log('Đã chạy xong kiểm tra tổng kết tuần');
+  await generateWeeklySummaryNotifications();
+  console.log('Đã chạy xong kiểm tra tổng kết tuần');
 })();

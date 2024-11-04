@@ -1,11 +1,10 @@
-const { User, TrainerDetails } = require("../models");
+const { User, TrainerDetails } = require('../models');
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const { generateRefreshTokenAndSetCookie } = require('../utils/generateToken');
 const { sendVerificationEmail } = require('../mail/emails');
 
 class TrainerController {
-
   async register(req, res) {
     try {
       const { username, password, email, role } = req.body;
@@ -24,7 +23,9 @@ class TrainerController {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
+      const verificationToken = Math.floor(
+        100000 + Math.random() * 900000
+      ).toString();
 
       const newUser = await User.create({
         username,
@@ -53,40 +54,40 @@ class TrainerController {
       const { id } = req.params;
       const trainer = await User.findOne({
         where: { id },
-        attributes: ["id", "username", "email", "role", "phone", "bio"],
+        attributes: ['id', 'username', 'email', 'role', 'phone', 'bio'],
         include: [
           {
             model: TrainerDetails,
-            as: "trainerDetails",
-            attributes: ["specialties", "available_slots"],
+            as: 'trainerDetails',
+            attributes: ['specialties', 'available_slots'],
             required: true,
           },
         ],
       });
       res.status(200).json({ trainer });
     } catch (error) {
-      console.error("Error fetching trainer profile:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error('Error fetching trainer profile:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   }
 
   async getAllTrains(req, res) {
     try {
       const trainers = await TrainerDetails.findAll({
-        attributes: ["id", "specialties", "available_slots"],
+        attributes: ['id', 'specialties', 'available_slots'],
         include: [
           {
             model: User,
-            as: "userTrainerDetails",
-            attributes: ["username", "email", "phone", "bio"],
+            as: 'userTrainerDetails',
+            attributes: ['username', 'email', 'phone', 'bio'],
             required: true,
-          }
-        ]
-      })
-      res.status(200).json({ message: "All Trainers", trainers })
+          },
+        ],
+      });
+      res.status(200).json({ message: 'All Trainers', trainers });
     } catch (error) {
-      console.error("Error fetching all trainers:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error('Error fetching all trainers:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   }
 }

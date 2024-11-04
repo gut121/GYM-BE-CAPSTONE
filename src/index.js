@@ -1,10 +1,21 @@
 const { sequelize, MealPlans } = require('./models');
 const express = require('express');
 const cors = require('cors');
-const createError = require('http-errors')
+const createError = require('http-errors');
 const { corsOptions } = require('./utils/corsOptions');
 const PORT = process.env.PORT || 4000;
-const {AuthRoutes,AdminRoutes,ClientRoutes,TrainerRoutes,ExerciseGuidesRoutes,SessionsRoutes,SessionExercisesRoutes,WorkoutPlansRoutes,MealPlansRoutes,ReviewsRoutes} = require('./routes');
+const {
+  AuthRoutes,
+  AdminRoutes,
+  ClientRoutes,
+  TrainerRoutes,
+  ExerciseGuidesRoutes,
+  SessionsRoutes,
+  SessionExercisesRoutes,
+  WorkoutPlansRoutes,
+  MealPlansRoutes,
+  ReviewsRoutes,
+} = require('./routes');
 const morgan = require('morgan');
 const { limiter } = require('./utils/rateLimiter');
 
@@ -25,36 +36,29 @@ app.use('/api/meal-plans', MealPlansRoutes);
 app.use('/api/reviews', ReviewsRoutes);
 app.use('/api/admin', AdminRoutes);
 
-
 app.use((req, res, next) => {
-    next(createError.NotFound('This route does not exist'));
+  next(createError.NotFound('This route does not exist'));
 });
 
 app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.json({
-        error: {
-            status: err.status || 500,
-            message: err.message,
-
-        },
-    });
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      status: err.status || 500,
+      message: err.message,
+    },
+  });
 });
 
 sequelize
-    .sync()
-    .then(() => {
-        console.log('Database & tables created!');
+  .sync()
+  .then(() => {
+    console.log('Database & tables created!');
 
-        app.listen(PORT, () => {
-            console.log(
-                `Server is running on port ${PORT}`
-            );
-        });
-    })
-    .catch((error) => {
-        console.error(
-            'Unable to create database tables:',
-            error
-        );
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
+  })
+  .catch((error) => {
+    console.error('Unable to create database tables:', error);
+  });

@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("ClientDetails", {
+    await queryInterface.createTable('ClientDetails', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -19,7 +19,7 @@ module.exports = {
         allowNull: true,
       },
       media_url: {
-        type: Sequelize.ENUM("image", "video"),
+        type: Sequelize.ENUM('image', 'video'),
         allowNull: true,
       },
       physical_condition: {
@@ -43,6 +43,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("ClientDetails");
+    await queryInterface.dropTable('ClientDetails');
   },
 };
