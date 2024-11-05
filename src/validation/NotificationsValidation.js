@@ -1,7 +1,7 @@
 // validation/notificationsValidation.js
 const { body, param } = require('express-validator');
 
-const notificationsValidation = {
+const NotificationsValidation = {
   // Validation cho lấy tất cả thông báo của một user
   getAllNotifications: [
     param('userId')
@@ -38,4 +38,4 @@ const notificationsValidation = {
   ],
 };
 
-module.exports = notificationsValidation;
+module.exports = NotificationsValidation;

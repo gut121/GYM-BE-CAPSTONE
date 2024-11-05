@@ -1,40 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const notificationsValidation = require('../validation/NotificationsValidation');
-const NotificationsController = require('../controllers/NotificationsController');
+const {NotificationsValidation} = require('../validation')
+const {NotificationsController} = require('../controllers');
 
 // Route cho lấy tất cả thông báo của một user
 router.get(
   '/user/:userId/notifications',
-  notificationsValidation.getAllNotifications,
+  NotificationsValidationotificationsValidation.getAllNotifications,
   NotificationsController.getAllNotifications
 );
 
 // Route cho lấy một thông báo theo ID
 router.get(
   '/notifications/:id',
-  notificationsValidation.getNotificationById,
+  NotificationsValidation.getNotificationById,
   NotificationsController.getNotificationById
 );
 
 // Route cho gửi nhắc nhở buổi tập
 router.post(
   '/sessions/:sessionId/reminder',
-  notificationsValidation.sendSessionReminder,
+  NotificationsValidation.sendSessionReminder,
   NotificationsController.sendSessionReminder
 );
 
 // Route cho gửi thông báo sau khi hoàn thành buổi tập
 router.post(
   '/sessions/:sessionId/completion',
-  notificationsValidation.sendNotificationAfterSessionCompletion,
+  NotificationsValidation.sendNotificationAfterSessionCompletion,
   NotificationsController.sendNotificationAfterSessionCompletion
 );
 
 // Route cho xóa thông báo
 router.delete(
   '/notifications/:id',
-  notificationsValidation.deleteNotification,
+  NotificationsValidation.deleteNotification,
   NotificationsController.deleteNotification
 );
 

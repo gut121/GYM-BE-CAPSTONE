@@ -9,8 +9,10 @@ const MealPlansValidation = require('./MealPlansValidation');
 const ReviewsValidation = require('./ReviewsValidation');
 const ExerciseGuidesValidation = require('./ExerciseGuidesValidation');
 const SessionExercisesValidation = require('./SessionExercisesValidation');
+const NotificationsValidation = require('./NotificationsValidation');
 
 module.exports = {
+
   AuthValidation,
   AdminValidation,
   UserValidation,
@@ -22,4 +24,5 @@ module.exports = {
   ReviewsValidation,
   ExerciseGuidesValidation,
   SessionExercisesValidation,
+  NotificationsValidation,
 };

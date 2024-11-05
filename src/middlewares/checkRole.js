@@ -14,6 +14,5 @@ const checkRole = (...allowedRoles) => {
   };
 };
 
-// arr = [tuan, kiet]
-// ...arr
+
 module.exports = checkRole;

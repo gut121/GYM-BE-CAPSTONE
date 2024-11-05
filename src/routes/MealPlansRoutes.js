@@ -2,6 +2,7 @@ const express = require('express');
 const { MealPlansController } = require('../controllers');
 const { MealPlansValidation } = require('../validation');
 const authenticateJWT = require('../middlewares/authMiddleware');
+const { check } = require('express-validator');
 const router = express.Router();
 
 router.get('/', MealPlansController.getMealPlans);
@@ -17,7 +18,7 @@ router.post(
   MealPlansController.createMealPlan
 );
 router.put(
-  '/update/:id',
+  '/update/:id', authenticateJWT,
   MealPlansValidation.updateMealPlan,
   MealPlansController.updateMealPlan
 );

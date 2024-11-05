@@ -135,31 +135,35 @@ class MealPlansController {
         fat,
         chef_notes,
       } = req.body;
-
       const mealPlan = await MealPlans.findByPk(id);
       if (!mealPlan) {
         return res
           .status(404)
           .json({ success: false, message: 'Meal Plan Not Found' });
       }
-      if (
-        mealPlan.trainer_id !== req.user.id &&
-        mealPlan.client_id !== req.user.id
-      ) {
-        return res.status(403).json({
-          message: 'You do not have permission to update this meal plan',
-        });
-      }
+  
+      // Cập nhật các giá trị mới cho kế hoạch ăn uống
+      mealPlan.week_number = week_number;
+      mealPlan.day_of_week = day_of_week;
+      mealPlan.meal_type = meal_type;
+      mealPlan.meal_name = meal_name;
+      mealPlan.ingredients = ingredients;
+      mealPlan.calories = calories;
+      mealPlan.protein = protein;
+      mealPlan.carbs = carbs;
+      mealPlan.fat = fat;
+      mealPlan.chef_notes = chef_notes;
+  
+      // Lưu thay đổi
       await mealPlan.save();
+  
       res.status(200).json({ success: true, data: mealPlan });
     } catch (error) {
       console.error('Error updating meal plan:', error);
-      res
-        .status(500)
-        .json({ success: false, message: 'Internal Server Error' });
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   }
-
+  
   async deleteMealPlan(req, res) {
     try {
       const { id } = req.params;
