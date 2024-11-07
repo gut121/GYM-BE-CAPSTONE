@@ -1,6 +1,5 @@
 const AuthValidation = require('./AuthValidation');
 const AdminValidation = require('./AdminValidation');
-const UserValidation = require('./UserValidation');
 const ClientValidation = require('./ClientValidation');
 const TrainerValidation = require('./TrainerValidation');
 const SessionsValidation = require('./SessionsValidation');
@@ -15,7 +14,6 @@ module.exports = {
 
   AuthValidation,
   AdminValidation,
-  UserValidation,
   ClientValidation,
   TrainerValidation,
   SessionsValidation,

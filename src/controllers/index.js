@@ -1,6 +1,5 @@
 const AuthController = require('./AuthController');
 const AdminController = require('./Admincontroller');
-const UserController = require('./UserController');
 const ClientController = require('./ClientController');
 const TrainerController = require('./TrainerController');
 const SessionsController = require('./SessionsController');
@@ -14,7 +13,6 @@ const SessionExercisesController = require('./SessionExercisesController');
 module.exports = {
   AuthController,
   AdminController,
-  UserController,
   ClientController,
   TrainerController,
   SessionsController,

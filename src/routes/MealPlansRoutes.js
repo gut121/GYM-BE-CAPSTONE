@@ -1,30 +1,30 @@
 const express = require('express');
 const { MealPlansController } = require('../controllers');
 const { MealPlansValidation } = require('../validation');
+const { validate } = require('../middlewares/validate');
 const authenticateJWT = require('../middlewares/authMiddleware');
-const { check } = require('express-validator');
 const router = express.Router();
 
 router.get('/', MealPlansController.getMealPlans);
 router.get(
   '/:id',
-  MealPlansValidation.getMealPlansById,
+  validate(MealPlansValidation.getMealPlansById),
   MealPlansController.getMealPlanById
 );
 router.post(
   '/create',
   authenticateJWT,
-  MealPlansValidation.createMealPlan,
+  validate(MealPlansValidation.createMealPlan),
   MealPlansController.createMealPlan
 );
 router.put(
   '/update/:id', authenticateJWT,
-  MealPlansValidation.updateMealPlan,
+  validate(MealPlansValidation.updateMealPlan),
   MealPlansController.updateMealPlan
 );
 router.delete(
   '/delete/:id',
-  MealPlansValidation.deleteMealPlan,
+  validate(MealPlansValidation.deleteMealPlan),
   MealPlansController.deleteMealPlan
 );
 

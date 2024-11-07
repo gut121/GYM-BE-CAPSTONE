@@ -93,6 +93,65 @@ class ExerciseGuidesController {
       res.status(500).json({ message: 'Failed to create exercise', error });
     }
   }
+  async updateExercise(req, res) {
+    try {
+      const { id } = req.params;
+      const {
+        name,
+        description,
+        muscle_group,
+        difficulty_level,
+        video_url,
+        image_url,
+      } = req.body;
+
+      const exercise = await ExerciseGuides.findByPk(id);
+      if (!exercise) {
+        return res
+          .status(404)
+          .json({ success: false, message: 'Exercise not found' });
+      }
+
+      await exercise.update({
+        name,
+        description,
+        muscle_group,
+        difficulty_level,
+        video_url,
+        image_url,
+      });
+
+      res.status(200).json({
+        success: true,
+        data: exercise,
+        message: 'Exercise updated successfully',
+      });
+    } catch (error) {
+      console.error('Error updating exercise:', error);
+      res.status(500).json({ message: 'Failed to update exercise', error });
+    }
+  }
+
+  async deleteExercise(req, res) {
+    try {
+      const { id } = req.params;
+
+      const exercise = await ExerciseGuides.findByPk(id);
+      if (!exercise) {
+        return res
+          .status(404)
+          .json({ success: false, message: 'Exercise not found' });
+      }
+
+      await exercise.destroy();
+      res
+        .status(200)
+        .json({ success: true, message: 'Exercise deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting exercise:', error);
+      res.status(500).json({ message: 'Failed to delete exercise', error });
+    }
+  }
 }
 
 module.exports = new ExerciseGuidesController();

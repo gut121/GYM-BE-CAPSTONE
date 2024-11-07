@@ -1,48 +1,23 @@
 const { body, param } = require('express-validator');
 
 const ClientValidation = {
-  getClientProfileById: [
+  getClientProfile: [
     param('id')
       .notEmpty()
       .withMessage('id is required')
       .isInt()
       .withMessage('id must be an integer'),
   ],
-    createClientProfile: [
-      body('height')
-        .notEmpty()
-        .withMessage('Height is required')
-        .isFloat()
-        .withMessage('Height must be a number'),
-      body('weight')
-        .notEmpty()
-        .withMessage('Weight is required')
-        .isFloat()
-        .withMessage('Weight must be a number'),
-      body('media_url')
-        .optional()
-        .isIn(['image', 'video'])
-        .withMessage('Media URL must be "image" or "video"'),
-      body('physical_condition')
-        .optional()
-        .isString()
-        .withMessage('Physical condition must be a string'),
-    ],
 
   updateClientProfile: [
-    param('id')
-      .notEmpty()
-      .withMessage('id is required')
-      .isInt()
-      .withMessage('id must be an integer'),
     body('username')
       .optional()
       .isString()
       .withMessage('Username must be a string'),
-    body('email')
+    body('date_of_birth')
       .optional()
-      .isEmail()
-      .withMessage('Must be a valid email'),
+      .isDate()
+      .withMessage('Date of birth must be a valid date'),
     body('phone')
       .optional()
       .isString()
@@ -61,19 +36,17 @@ const ClientValidation = {
       .withMessage('Weight must be a number'),
     body('media_url')
       .optional()
-      .isIn(['image', 'video'])
-      .withMessage('Media URL must be "image" or "video"'),
+      .notEmpty()
+      .withMessage('Media URL is required'),
     body('physical_condition')
       .optional()
       .isString()
       .withMessage('Physical condition must be a string'),
-  ],
-  deleteClientProfile: [
-    param('id')
+      body('avatar_url')
       .notEmpty()
-      .withMessage('id is required')
-      .isInt()
-      .withMessage('id must be an integer'),
+      .withMessage('avatarUrl is required')
+      .isURL()
+      .withMessage('avatarUrl must be a valid URL'),
   ],
 
 };

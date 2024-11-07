@@ -1,56 +1,108 @@
-const { body, param, query } = require('express-validator');
+const { body, query, param } = require('express-validator');
 
-const ExercieGuidesValidation = {
+const ExerciseGuidesValidation = {
   getExercisesByNames: [
     query('names')
       .notEmpty()
-      .withMessage('names is required')
-      .isArray()
-      .withMessage('names must be an array')
-      .custom((names) => {
-        return names.every((name) => typeof name === 'string');
+      .withMessage('Names parameter is required')
+      .isString()
+      .withMessage('Names must be a string of comma-separated values')
+      .custom((value) => {
+        const namesArray = value.split(',').map((name) => name.trim());
+        return namesArray.every((name) => typeof name === 'string' && name.length > 0);
       })
-      .withMessage('names must be an array of strings'),
+      .withMessage('Each name must be a non-empty string'),
   ],
+
   createExercise: [
     body('name')
       .notEmpty()
-      .withMessage('name is required')
-      .isLength({ min: 3, max: 50 })
-      .withMessage('name must be between 3 and 50 characters long')
-      .custom((value, { req }) => {
-        return (
-          !req.body.names || req.body.names.every((name) => name !== value)
-        );
-      })
-      .withMessage('name must be unique'),
+      .withMessage('Name is required')
+      .isString()
+      .isLength({ max: 255 })
+      .withMessage('Name must be a string with a maximum length of 255 characters'),
+
     body('description')
-      .notEmpty()
-      .withMessage('description is required')
-      .isLength({ min: 10, max: 200 })
-      .withMessage('description must be between 10 and 200 characters long'),
+      .optional()
+      .isString()
+      .withMessage('Description must be a string'),
+
     body('muscle_group')
-      .notEmpty()
-      .withMessage('muscles is required')
-      .isArray()
-      .withMessage('muscles must be an array')
-      .custom((muscles) => {
-        return muscles.every((muscle) => typeof muscle === 'string');
-      })
-      .withMessage('muscles must be an array of strings'),
+      .optional()
+      .isString()
+      .isLength({ max: 255 })
+      .withMessage('Muscle group must be a string with a maximum length of 255 characters'),
+
     body('difficulty_level')
-      .notEmpty()
-      .withMessage('difficulty level is required')
-      .isInt({ min: 1, max: 5 })
-      .withMessage('difficulty level must be an integer between 1 and 5'),
+      .optional()
+      .isString()
+      .isLength({ max: 50 })
+      .withMessage('Difficulty level must be a string with a maximum length of 50 characters'),
+
     body('video_url')
       .optional()
       .isURL()
-      .withMessage('video_url must be a valid URL'),
-    body(' image_url')
+      .withMessage('Video URL must be a valid URL')
+      .isLength({ max: 255 })
+      .withMessage('Video URL must have a maximum length of 255 characters'),
+
+    body('image_url')
       .optional()
       .isURL()
-      .withMessage('image_url must be a valid URL'),
+      .withMessage('Image URL must be a valid URL')
+      .isLength({ max: 255 })
+      .withMessage('Image URL must have a maximum length of 255 characters'),
+  ],
+
+  updateExercise: [
+    param('id')
+      .notEmpty()
+      .withMessage('Exercise ID is required')
+      .isInt()
+      .withMessage('Exercise ID must be an integer'),
+
+    body('name')
+      .optional()
+      .isString()
+      .isLength({ max: 255 })
+      .withMessage('Name must be a string with a maximum length of 255 characters'),
+
+    body('description')
+      .optional()
+      .isString()
+      .withMessage('Description must be a string'),
+
+    body('muscle_group')
+      .optional()
+      .isString()
+      .isLength({ max: 255 })
+      .withMessage('Muscle group must be a string with a maximum length of 255 characters'),
+
+    body('difficulty_level')
+      .optional()
+      .isString()
+      .isLength({ max: 50 })
+      .withMessage('Difficulty level must be a string with a maximum length of 50 characters'),
+
+    body('video_url')
+      .optional()
+      .isURL()
+      .withMessage('Video URL must be a valid URL')
+      .isLength({ max: 255 })
+      .withMessage('Video URL must have a maximum length of 255 characters'),
+
+    body('image_url')
+      .optional()
+      .isURL()
+      .withMessage('Image URL must be a valid URL')
+      .isLength({ max: 255 })
+      .withMessage('Image URL must have a maximum length of 255 characters'),
+
+    body('admin_id')
+      .optional()
+      .isInt()
+      .withMessage('Admin ID must be an integer'),
   ],
 };
-module.exports = ExercieGuidesValidation;
+
+module.exports = ExerciseGuidesValidation;

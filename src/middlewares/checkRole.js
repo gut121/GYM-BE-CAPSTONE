@@ -4,6 +4,7 @@ const checkRole = (...allowedRoles) => {
   return (req, res, next) => {
     authenticateJWT(req, res, () => {
       if (req.user && allowedRoles.includes(req.user.role)) {
+        console.log('req.user.role is allowed', req.user.role);
         next();
       } else {
         return res

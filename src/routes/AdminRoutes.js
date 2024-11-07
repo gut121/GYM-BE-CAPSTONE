@@ -1,14 +1,11 @@
 const express = require('express');
-const { UserController, AdminController } = require('../controllers');
+const { AdminController } = require('../controllers');
 const { UserValidation, AdminValidation } = require('../validation');
-const { validate } = require('node-cron');
+const { validate } = require('../middlewares/validate');
+
 const router = express.Router();
 
-router.post('/register', AdminValidation.register, AdminController.register);
-router.put(
-  '/update/avatar/:id',
-  UserValidation.updateAvatar,
-  UserController.updateAvatar
-);
+router.post('/register', validate(AdminValidation.register), AdminController.register);
+
 
 module.exports = router;
