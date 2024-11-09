@@ -1,6 +1,5 @@
 const { Op } = require('sequelize');
 const { ExerciseGuides, User } = require('../models');
-
 class ExerciseGuidesController {
   async getExercises(req, res) {
     try {

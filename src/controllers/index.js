@@ -8,6 +8,7 @@ const MealPlansController = require('./MealPlansController');
 const ReviewsController = require('./ReviewsController');
 const ExerciseGuidesController = require('./ExerciseGuidesController');
 const SessionExercisesController = require('./SessionExercisesController');
+const MessagesController = require('./MessagesController');
 
 // Export các controller để sử dụng ở nơi khác trong ứng dụng
 module.exports = {
@@ -21,4 +22,5 @@ module.exports = {
   ReviewsController,
   ExerciseGuidesController,
   SessionExercisesController,
+  MessagesController,
 };

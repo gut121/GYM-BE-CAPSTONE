@@ -12,18 +12,16 @@ const TrainerDetails = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    certification_url: {
+      type: DataTypes.STRING(255), 
+      allowNull: true,
+    },
+    years_of_experience: {
+      type: DataTypes.INTEGER, 
+      allowNull: true,
+      },
     trainer_id: {
       type: DataTypes.INTEGER,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
     },
   },
   {

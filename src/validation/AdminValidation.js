@@ -18,6 +18,15 @@ const AdminValidation = {
       .isEmail()
       .withMessage('Invalid email '),
   ],
+  updateAvatar: [
+    body('avatar_url')
+      .notEmpty()
+      .withMessage('Avatar URL is required')
+      .isURL()
+      .withMessage('Avatar URL must be a valid URL')
+      .isLength({ max: 255 })
+      .withMessage('Avatar URL must not exceed 255 characters'),
+  ],
 };
 
 module.exports = AdminValidation;

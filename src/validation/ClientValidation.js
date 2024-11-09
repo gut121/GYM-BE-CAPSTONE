@@ -42,7 +42,7 @@ const ClientValidation = {
       .optional()
       .isString()
       .withMessage('Physical condition must be a string'),
-      body('avatar_url')
+    body('avatar_url')
       .notEmpty()
       .withMessage('avatarUrl is required')
       .isURL()

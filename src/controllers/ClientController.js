@@ -4,7 +4,7 @@ const { Op } = require('sequelize');
 class ClientController {
   async getClientProfile(req, res) {
     try {
-      const {userId}  = req.params;
+      const { userId } = req.params;
       const client = await User.findOne({
         where: { id: userId },
         attributes: ['id', 'username', 'email', 'role', 'phone', 'bio'],
@@ -68,6 +68,11 @@ class ClientController {
       const client = await User.findOne({
         where: { id: userId },
       });
+      if (!client) {
+        return res
+          .status(404)
+          .json({ success: false, error: 'Client not found' });
+      }
 
       // Update user details
       await client.update({ username, date_of_birth, phone, bio, avatar_url });
@@ -78,6 +83,14 @@ class ClientController {
       });
       if (clientDetails) {
         await clientDetails.update({
+          height,
+          weight,
+          media_url,
+          physical_condition,
+        });
+      } else {
+        await ClientDetails.create({
+          client_id: userId,
           height,
           weight,
           media_url,
@@ -96,11 +109,16 @@ class ClientController {
   }
   async searchClients(req, res) {
     try {
-      const { query } = req.query;
-      const clients = await User.findAll({
+      const { username } = req.query;
+      if (!username) {
+        return res.status(400).json({
+          success: false,
+          message: 'Username is required for searching clients',
+        });
+      }
+      const clients = await User.findOne({
         where: {
-          role: 'client',
-          [Sequelize.Op.or]: [{ username: { [Op.like]: `%${query}%` } }],
+          username: { [Op.like]: `%${username}%` }, 
         },
         include: [
           {
@@ -109,12 +127,27 @@ class ClientController {
             attributes: ['height', 'weight', 'media_url', 'physical_condition'],
           },
         ],
+        attributes: ['id', 'username', 'email', 'phone', 'bio', 'avatar_url'],
       });
 
-      res.status(200).json({ success: true, data: clients });
+      if (clients.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'No clients found with the given username',
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Clients found',
+        data: clients,
+      });
     } catch (error) {
-      console.error('Error searching clients:', error);
-      res.status(500).json({ success: false, error: 'Internal Server Error' });
+      console.error('Error searching clients by username:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Internal Server Error',
+      });
     }
   }
 }

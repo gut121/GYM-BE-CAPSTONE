@@ -9,6 +9,7 @@ const ReviewsValidation = require('./ReviewsValidation');
 const ExerciseGuidesValidation = require('./ExerciseGuidesValidation');
 const SessionExercisesValidation = require('./SessionExercisesValidation');
 const NotificationsValidation = require('./NotificationsValidation');
+const MessagesValidation = require('./MessagesValidation');
 
 module.exports = {
 
@@ -23,4 +24,5 @@ module.exports = {
   ExerciseGuidesValidation,
   SessionExercisesValidation,
   NotificationsValidation,
+  MessagesValidation
 };
