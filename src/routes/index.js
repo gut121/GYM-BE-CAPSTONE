@@ -8,6 +8,7 @@ const MealPlansRoutes = require('./MealPlansRoutes');
 const ReviewsRoutes = require('./ReviewsRoutes');
 const ExerciseGuidesRoutes = require('./ExerciseGuidesRoutes');
 const SessionExercisesRoutes = require('./SessionExercisesRoutes');
+const MessagesRoutes = require('./MessagesRoutes');
 
 module.exports = {
   AuthRoutes,
@@ -20,4 +21,5 @@ module.exports = {
   ReviewsRoutes,
   ExerciseGuidesRoutes,
   SessionExercisesRoutes,
+  MessagesRoutes,
 };

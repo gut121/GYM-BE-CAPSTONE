@@ -1,6 +1,6 @@
 const express = require('express');
 const {MessagesController} = require('../controllers');
-const {MessagesValidation} = require('../Validations');
+const {MessagesValidation} = require('../validation');
 const { validate } = require('../middlewares/validate');
 const router = express.Router();
 
@@ -16,8 +16,8 @@ router.get(
 // Gửi tin nhắn mới
 router.post(
   '/',
-  validate(MessagesValidation.createMessageValidation),
-  MessagesController.createMessage
+  validate(MessagesValidation.sendMessageValidation),
+  MessagesController.sendMessage
 );
 
 // Xóa tin nhắn

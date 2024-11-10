@@ -1,49 +1,58 @@
-const Messages = require('../models');
+const {Messages} = require('../models');
 const { Op } = require('sequelize');
 
 class MessagesController  {
   // Lấy tất cả tin nhắn giữa 2 người dùng
   async getMessages(req, res) {
-    const { sender_id, receiver_id } = req.params;
-
     try {
+      const { sender_id, receiver_id } = req.params;
+
+      if (!sender_id || !receiver_id) {
+          return res.status(400).json({ error: 'Sender ID and Receiver ID are required' });
+      }
+
+      // Lấy tin nhắn giữa hai người dùng
       const messages = await Messages.findAll({
-        where: {
-          [Op.or]: [
-            { sender_id, receiver_id },
-            { sender_id: receiver_id, receiver_id: sender_id },
-          ],
-        },
-        order: [['createdAt', 'ASC']],
+          where: {
+              [Op.or]: [
+                  { sender_id, receiver_id },
+                  { sender_id: receiver_id, receiver_id: sender_id },
+              ],
+          },
+          order: [['createdAt', 'ASC']], // Sắp xếp theo thời gian
       });
 
-      return res.status(200).json({ success: true, messages });
-    } catch (error) {
-      return res.status(500).json({ success: false, message: error.message });
-    }
+      return res.status(200).json({ data: messages });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal server error' });
   }
+};
 
   // Tạo tin nhắn mới
-  async createMessage(req, res) {
-    const { sender_id, receiver_id, message, media_url, media_type } = req.body;
-
+  async sendMessage(req, res) {
     try {
-      if (!sender_id || !receiver_id) {
-        return res.status(400).json({ success: false, message: 'Sender and receiver IDs are required.' });
+      const { sender_id, receiver_id, message, media_url, media_type } = req.body;
+
+      if (!sender_id || !receiver_id || (!message && !media_url)) {
+          return res.status(400).json({
+              error: 'Sender ID, Receiver ID, and at least one of message or media URL are required',
+          });
       }
 
       const newMessage = await Messages.create({
-        sender_id,
-        receiver_id,
-        message,
-        media_url,
-        media_type,
+          sender_id,
+          receiver_id,
+          message: message || null,
+          media_url: media_url || null,
+          media_type: media_type || null,
       });
 
-      return res.status(201).json({ success: true, message: 'Message sent successfully!', data: newMessage });
-    } catch (error) {
-      return res.status(500).json({ success: false, message: error.message });
-    }
+      return res.status(201).json({ message: 'Message sent successfully', data: newMessage });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
   }
 
   // Xóa tin nhắn
@@ -85,4 +94,4 @@ class MessagesController  {
   }
 };
 
-module.exports = MessagesController;
+module.exports = new MessagesController;

@@ -1,114 +1,91 @@
-const { Sessions, ExerciseGuides, SessionExercises } = require('../models');
+const { SessionExercises, Sessions, ExerciseGuides } = require('../models');
+
 class SessionExercisesController {
+
   async getAllSessionExercises(req, res) {
     try {
-      const sessions = await Sessions.findAll({
+      const sessionExercises = await SessionExercises.findAll({
         include: [
           {
+            model: Sessions,
+            as: 'session',
+          },
+          {
             model: ExerciseGuides,
-            through: SessionExercises,
+            as: 'exerciseDetails',
           },
         ],
       });
-      res.status(200).json({ success: true, data: sessions });
+      res.status(200).json(sessionExercises);
     } catch (error) {
-      console.error('Error fetching session exercises:', error);
-      res.status(500).json({ error: 'Error fetching session exercises' });
+      res.status(500).json({ error: 'Failed to fetch Session Exercises', details: error.message });
     }
   }
 
-  async getSessionsExercisesById(req, res) {
-    const { id } = req.params;
+  async getSessionExerciseById(req, res) {
     try {
-      const session = await Sessions.findByPk(id, {
+      const { id } = req.params;
+      const sessionExercise = await SessionExercises.findByPk(id, {
         include: [
           {
+            model: Sessions,
+            as: 'session',
+          },
+          {
             model: ExerciseGuides,
-            through: SessionExercises,
+            as: 'exerciseDetails',
           },
         ],
-      });
-
-      if (!session) {
-        return res.status(404).json({ error: 'Session not found' });
-      }
-
-      res.status(200).json({ success: true, data: session });
-    } catch (error) {
-      console.error('Error fetching session exercises:', error);
-      res.status(500).json({ error: 'Error fetching session exercises' });
-    }
-  }
-
-  async addExerciseToSession(req, res) {
-    const { sessionId, exerciseId } = req.body;
-
-    try {
-      const session = await Sessions.findByPk(sessionId);
-      const exerciseGuide = await ExerciseGuides.findByPk(exerciseId);
-
-      if (!session || !exerciseGuide) {
-        return res.status(404).json({ error: 'Session or Exercise not found' });
-      }
-
-      await SessionExercises.create({
-        session_id: sessionId,
-        exercise_id: exerciseId,
-      });
-      res
-        .status(200)
-        .json({ message: 'Exercise added to session successfully' });
-    } catch (error) {
-      console.error('Error adding exercise to session:', error);
-      res.status(500).json({ error: 'Error adding exercise to session' });
-    }
-  }
-
-  // Remove exercise from session
-  async removeExerciseFromSession(req, res) {
-    const { sessionId, exerciseId } = req.body;
-
-    try {
-      const sessionExercise = await SessionExercises.findOne({
-        where: {
-          session_id: sessionId,
-          exercise_id: exerciseId,
-        },
       });
 
       if (!sessionExercise) {
-        return res.status(404).json({ error: 'Session or Exercise not found' });
+        return res.status(404).json({ error: 'Session Exercise not found' });
       }
 
-      await sessionExercise.destroy();
-      res
-        .status(200)
-        .json({ message: 'Exercise removed from session successfully' });
+      res.status(200).json(sessionExercise);
     } catch (error) {
-      console.error('Error removing exercise from session:', error);
-      res.status(500).json({ error: 'Error removing exercise from session' });
+      res.status(500).json({ error: 'Failed to fetch Session Exercise', details: error.message });
     }
   }
 
-  // Update session status
-  async updateSessionStatus(req, res) {
-    const { sessionId } = req.params;
-    const { status } = req.body;
 
+  async createSessionExercise(req, res) {
     try {
-      const session = await Sessions.findByPk(sessionId);
-
-      if (!session) {
-        return res.status(404).json({ error: 'Session not found' });
-      }
-
-      session.status = status;
-      await session.save();
-
-      res.status(200).json({ message: 'Session status updated successfully' });
+      const { body } = req;
+      const sessionExercise = await SessionExercises.create(body);
+      res.status(201).json(sessionExercise);
     } catch (error) {
-      console.error('Error updating session:', error);
-      res.status(500).json({ error: 'Error updating session status' });
+      res.status(500).json({ error: 'Failed to create Session Exercise', details: error.message });
+    }
+  }
+
+  async updateSessionExercise(req, res) {
+    try {
+      const { id } = req.params;
+      const { body } = req;
+      const sessionExercise = await SessionExercises.findByPk(id);
+      if (!sessionExercise) {
+        return res.status(404).json({ error: 'Session Exercise not found' });
+      }
+      const updatedSessionExercise = await sessionExercise.update(body);
+      res.status(200).json(updatedSessionExercise);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update Session Exercise', details: error.message });
+    }
+  }
+
+
+  async deleteSessionExercise(req, res) {
+    try {
+      const { id } = req.params;
+      const sessionExercise = await SessionExercises.findByPk(id);
+      if (!sessionExercise) {
+        return res.status(404).json({ error: 'Session Exercise not found' });
+      }
+      await sessionExercise.destroy();
+      res.status(204).json({ message: 'Session Exercise deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete Session Exercise', details: error.message });
     }
   }
 }

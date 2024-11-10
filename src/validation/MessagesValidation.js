@@ -2,7 +2,7 @@ const { body, param } = require('express-validator');
 
 const MessagesValidation = {
   // Xác thực khi gửi tin nhắn mới
-  createMessageValidation: [
+  sendMessageValidation: [
     body('sender_id')
       .isInt({ gt: 0 })
       .withMessage('Sender ID must be a positive integer.'),
@@ -11,16 +11,36 @@ const MessagesValidation = {
       .withMessage('Receiver ID must be a positive integer.'),
     body('message')
       .optional()
-      .isString()
-      .withMessage('Message must be a string.'),
+      .custom((value) => {
+        if (value === null || value === '') return true; // Chấp nhận null hoặc chuỗi rỗng
+        try {
+          return true;
+        } catch {
+          throw new Error('Message must be a string or null');
+        }
+      }),
     body('media_url')
       .optional()
-      .isURL()
-      .withMessage('Media URL must be a valid URL.'),
+      .custom((value) => {
+        if (value === null || value === '') return true; // Chấp nhận null hoặc chuỗi rỗng
+        try {
+          new URL(value); // Kiểm tra xem có phải URL hợp lệ không
+          return true;
+        } catch {
+          throw new Error('Media URL must be a valid URL or null');
+        }
+      }),
     body('media_type')
       .optional()
-      .isIn(['image', 'video'])
-      .withMessage('Media type must be either "image" or "video".'),
+      .custom((value) => {
+        if (value === null || value === '') return true; // Chấp nhận null hoặc chuỗi rỗng
+        try {
+          new URL(value); // Kiểm tra xem có phải URL hợp lệ không
+          return true;
+        } catch {
+          throw new Error('Media URL must be a valid URL or null');
+        }
+      }),
   ],
 
   // Xác thực khi xóa tin nhắn

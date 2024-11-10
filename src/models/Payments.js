@@ -16,6 +16,10 @@ const Payments = sequelize.define(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
+    total_amount: {
+      type: DataTypes.DECIMAL(10, 2), 
+      allowNull: false,
+    },
     payment_method: {
       type: DataTypes.ENUM(
         'Credit Card',
