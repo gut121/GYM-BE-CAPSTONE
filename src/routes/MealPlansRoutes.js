@@ -1,8 +1,9 @@
 const express = require('express');
 const { MealPlansController } = require('../controllers');
 const { MealPlansValidation } = require('../validation');
-const { validate } = require('../middlewares/validate');
 const authenticateJWT = require('../middlewares/authMiddleware');
+const checkRole = require('../middlewares/checkRole');
+const { validate } = require('../middlewares/validate');
 const router = express.Router();
 
 router.get('/', MealPlansController.getMealPlans);
@@ -14,11 +15,14 @@ router.get(
 router.post(
   '/create',
   authenticateJWT,
+  checkRole('trainer'),
   validate(MealPlansValidation.createMealPlan),
   MealPlansController.createMealPlan
 );
 router.put(
-  '/update/:id', authenticateJWT,
+  '/update/:id', 
+  authenticateJWT,
+  checkRole(['trainer', 'client']),
   validate(MealPlansValidation.updateMealPlan),
   MealPlansController.updateMealPlan
 );

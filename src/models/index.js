@@ -81,15 +81,29 @@ User.hasMany(TrainerAssignments, {
 TrainerAssignments.belongsTo(User, { foreignKey: 'client_id', as: 'client' });
 TrainerAssignments.belongsTo(User, { foreignKey: 'trainer_id', as: 'trainer' });
 
-// Relationships between Sessions and ExerciseGuides through SessionExercises
+// Thiết lập quan hệ giữa Sessions và ExerciseGuides
 Sessions.belongsToMany(ExerciseGuides, {
   through: SessionExercises,
   foreignKey: 'session_id',
+  as: 'exercises', 
 });
+// Thiết lập quan hệ giữa ExerciseGuides và Sessions
 ExerciseGuides.belongsToMany(Sessions, {
   through: SessionExercises,
   foreignKey: 'exercise_id',
+  as: 'sessions', 
 });
+// Relationships between Sessions and ExerciseGuides through SessionExercises
+SessionExercises.belongsTo(Sessions, {
+  foreignKey: 'session_id',
+  as: 'session',
+});
+
+SessionExercises.belongsTo(ExerciseGuides, {
+  foreignKey: 'exercise_id',
+  as: 'exercise',
+});
+
 
 // Payments relationships
 User.hasMany(Payments, { foreignKey: 'client_id', as: 'clientPayments' });

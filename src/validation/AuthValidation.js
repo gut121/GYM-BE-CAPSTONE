@@ -19,7 +19,7 @@ const AuthValidation = {
       .withMessage('Invalid email '),
   ],
   verifyEmail: [
-    param('code')
+    body('code')
       .notEmpty()
       .withMessage('Code must be')
       .isLength({ min: 6, max: 6 })

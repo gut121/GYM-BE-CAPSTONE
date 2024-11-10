@@ -2,47 +2,69 @@ const { body, param } = require('express-validator');
 
 const SessionsExercisesValidation = {
   getSessionsExercisesById: [
-    param('id')
+    param('session_id')
       .notEmpty()
-      .withMessage('id is required')
+      .withMessage('Session ID is required.')
       .isInt()
-      .withMessage('id must be an integer'),
+      .withMessage('Session ID must be an integer.'),
+    param('exercise_id')
+      .notEmpty()
+      .withMessage('Exercise ID is required.')
+      .isInt()
+      .withMessage('Exercise ID must be an integer.'),
   ],
-  addExerciseToSession: [
-    body('sessionId')
+   // Validation cho thêm bài tập vào buổi tập
+   addExerciseToSession: [
+    body('session_id')
       .notEmpty()
-      .withMessage('sessionId is required')
+      .withMessage('Session ID is required')
       .isInt()
-      .withMessage('sessionId must be an integer'),
-    body('exerciseId')
+      .withMessage('Session ID must be an integer'),
+    body('exercise_id')
       .notEmpty()
-      .withMessage('exerciseId is required')
+      .withMessage('Exercise ID is required')
       .isInt()
-      .withMessage('exerciseId must be an integer'),
+      .withMessage('Exercise ID must be an integer'),
+    body('sets')
+      .notEmpty()
+      .withMessage('Sets is required')
+      .isInt({ min: 1 })
+      .withMessage('Sets must be a positive integer'),
+    body('reps')
+      .notEmpty()
+      .withMessage('Reps is required')
+      .isInt({ min: 1 })
+      .withMessage('Reps must be a positive integer'),
   ],
+
+  // Validation cho xóa bài tập khỏi buổi tập
   removeExerciseFromSession: [
     body('sessionId')
       .notEmpty()
-      .withMessage('sessionId is required')
+      .withMessage('Session ID is required')
       .isInt()
-      .withMessage('sessionId must be an integer'),
+      .withMessage('Session ID must be an integer'),
     body('exerciseId')
       .notEmpty()
-      .withMessage('exerciseId is required')
+      .withMessage('Exercise ID is required')
       .isInt()
-      .withMessage('exerciseId must be an integer'),
+      .withMessage('Exercise ID must be an integer'),
   ],
+
+  // Validation cho cập nhật trạng thái của buổi tập
   updateSessionStatus: [
     param('sessionId')
       .notEmpty()
-      .withMessage('sessionId is required')
+      .withMessage('Session ID is required')
       .isInt()
-      .withMessage('sessionId must be an integer'),
+      .withMessage('Session ID must be an integer'),
     body('status')
       .notEmpty()
-      .withMessage('status is required')
+      .withMessage('Status is required')
       .isString()
-      .withMessage('status must be a string'),
+      .withMessage('Status must be a string')
+      .isIn(['pending', 'completed', 'cancelled'])
+      .withMessage('Status must be one of: pending, completed, or cancelled'),
   ],
 };
 

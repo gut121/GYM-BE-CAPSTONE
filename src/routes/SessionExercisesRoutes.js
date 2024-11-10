@@ -9,28 +9,34 @@ const router = express.Router();
 router.get('/', SessionExercisesController.getAllSessionExercises);
 
 router.get(
-  '/:id',
+  '/:session_id/:exercise_id',
   validate(SessionExercisesValidation.getSessionsExercisesById),
-  SessionExercisesController.getSessionsExercisesById
+  SessionExercisesController.getSessionExerciseById
 );
 
 router.post(
-  '/',
-  validate(SessionExercisesValidation.addExerciseToSession), 
+  '/create',
+  validate(SessionExercisesValidation.addExerciseToSession),
+  authenticateJWT,
+  checkRole('trainer'),
   SessionExercisesController.addExerciseToSession
 );
 
 router.delete(
   '/',
-  validate(SessionExercisesValidation.removeExerciseFromSession), 
+  validate(SessionExercisesValidation.removeExerciseFromSession),
+  authenticateJWT,
+  checkRole('trainer'),
   SessionExercisesController.removeExerciseFromSession
 );
 
-router.patch(
+// Cập nhật trạng thái của buổi tập
+router.put(
   '/:sessionId/status',
-  validate(SessionExercisesValidation.updateSessionStatus), 
+  validate(SessionExercisesValidation.updateSessionStatus),
+  authenticateJWT,
+  checkRole(['trainer', 'client']),
   SessionExercisesController.updateSessionStatus
 );
-
 
 module.exports = router;
