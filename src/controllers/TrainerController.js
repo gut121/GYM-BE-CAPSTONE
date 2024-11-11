@@ -258,6 +258,97 @@ class TrainerController {
       });
     }
   }
+  async getClientProgress(req, res) {
+    try {
+      const { trainer_id, client_id } = req.query;
+  
+      const totalSessions = await Sessions.count({
+        where: { trainerId:trainer_id, clientId: client_id },
+      });
+  
+      const completedSessions = await Sessions.count({
+        where: {
+          trainerId:trainer_id ,
+          clientId: client_id ,
+          status: 'completed',
+        },
+      });
+  
+      const cancelledSessions = await Sessions.findAll({
+        where: {
+          trainer_id: trainerId,
+          client_id: clientId,
+          status: 'cancelled',
+        },
+        attributes: ['incomplete_reason'],
+      });
+  
+      res.status(200).json({
+        totalSessions,
+        completedSessions,
+        completionRate: ((completedSessions / totalSessions) * 100).toFixed(2),
+        cancelledSessions,
+      });
+    } catch (error) {
+      console.error('Error fetching client progress:', error);
+      res.status(500).json({ error: 'Error fetching client progress' });
+    }
+  }
+  async getClientHealthStats(req, res) {
+    try {
+      const { client_id } = req.query;
+  
+      const healthData = await ClientDetails.findOne({
+        where: { clientId: client_id },
+        attributes: ['height', 'weight', 'physical_condition', 'updatedAt'],
+      });
+  
+      res.status(200).json({ healthData });
+    } catch (error) {
+      console.error('Error fetching client health stats:', error);
+      res.status(500).json({ error: 'Error fetching client health stats' });
+    }
+  }
+  async getClientWorkoutPlans(req, res) {
+    try {
+      const { client_id } = req.query;
+  
+      const workoutPlans = await WorkoutPlans.findAll({
+        where: { clientId: client_id },
+        attributes: ['week_number', 'description', 'summary_generated'],
+        include: [
+          {
+            model: Sessions,
+            as: 'sessions',
+            attributes: [
+              [sequelize.fn('COUNT', sequelize.col('id')), 'completedSessions'],
+            ],
+            where: { status: 'completed' },
+          },
+        ],
+      });
+  
+      res.status(200).json({ workoutPlans });
+    } catch (error) {
+      console.error('Error fetching client workout plans:', error);
+      res.status(500).json({ error: 'Error fetching client workout plans' });
+    }
+  }
+  async getClientReviews(req, res) {
+    try {
+      const { trainer_id, client_id } = req.query;
+  
+      const reviews = await Reviews.findAll({
+        where: {  trainerId : trainer_id,  clientId: client_id },
+        attributes: ['rating', 'comment', 'createdAt'],
+      });
+  
+      res.status(200).json({ reviews });
+    } catch (error) {
+      console.error('Error fetching client reviews:', error);
+      res.status(500).json({ error: 'Error fetching client reviews' });
+    }
+  }
 }
 
 module.exports = new TrainerController();

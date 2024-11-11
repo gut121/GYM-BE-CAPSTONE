@@ -46,4 +46,28 @@ router.get(
   validate(TrainerValidation.searchTrainersBySpecialties),
   TrainerController.searchTrainersBySpecialties
 );
+// Thống kê tiến độ tập luyện của Client
+router.get(
+  '/statistical-client',
+  validate(TrainerValidation.getClientProgress),
+  TrainerController.getClientProgress
+);
+//Thống kê sức khỏe của Client
+router.get(
+  '/statistical-health',
+  validate(TrainerValidation.getClientHealthStats),
+  TrainerController.getClientHealthStats
+);
+//Thống kê kế hoạch tập luyện của Client
+router.get(
+  '/statistical-plan',
+  validate(TrainerValidation.getClientWorkoutPlans),
+  TrainerController.getClientWorkoutPlans
+)
+//Thống kê đánh giá của Client
+router.get(
+  '/statistical-review',
+  validate(TrainerValidation.getClientReviews),
+  TrainerController.getClientReviews
+)
 module.exports = router;

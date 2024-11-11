@@ -27,6 +27,13 @@ const AdminValidation = {
       .isLength({ max: 255 })
       .withMessage('Avatar URL must not exceed 255 characters'),
   ],
+  getClientPaymentHistory:[
+    query('client_id')
+      .notEmpty()
+      .withMessage('Client ID is required')
+      .isInt()
+      .withMessage('Client ID must be an integer'),
+]
 };
 
 module.exports = AdminValidation;

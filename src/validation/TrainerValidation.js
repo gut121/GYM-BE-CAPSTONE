@@ -95,6 +95,46 @@ const TrainerValidation = {
       .isString()
       .withMessage('Username must be a string'),
   ],
+  getClientProgress: [
+    query('client_id')
+      .notEmpty()
+      .withMessage('Client ID is required')
+      .isInt()
+      .withMessage('Client ID must be an integer'),
+    query('trainer_id')
+      .notEmpty()
+      .withMessage('Trainer ID is required')
+      .isInt()
+      .withMessage('Trainer ID must be an integer'),
+  ],
+  getClientHealthStats: [
+    query('client_id')
+      .notEmpty()
+      .withMessage('Client ID is required')
+      .isInt()
+      .withMessage('Client ID must be an integer'),
+  ],
+  getClientWorkoutPlans: [
+    query('client_id')
+      .notEmpty()
+      .withMessage('Client ID is required')
+      .isInt()
+      .withMessage('Client ID must be an integer'),
+  ],
+  getClientReviews: [
+    query('client_id')
+      .notEmpty()
+      .withMessage('Client ID is required')
+      .isInt()
+      .withMessage('Client ID must be an integer'),
+    query('trainer_id')
+      .notEmpty()
+      .withMessage('Trainer ID is required')
+      .isInt()
+      .withMessage('Trainer ID must be an integer'),
+  ],
+
+  
 };
 
 module.exports = TrainerValidation;
