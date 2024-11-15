@@ -29,6 +29,14 @@ const User = sequelize.define(
     bio: {
       type: DataTypes.STRING(100),
     },
+    age: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    gender: {
+      type: DataTypes.ENUM('Male', 'Female', 'Other'),
+      allowNull: true,
+    },
     date_of_birth: {
       type: DataTypes.DATE,
     },

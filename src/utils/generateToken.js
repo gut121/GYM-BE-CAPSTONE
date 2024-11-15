@@ -10,7 +10,7 @@ exports.generateToken = (userId, role) => {
 
 exports.generateRefreshTokenAndSetCookie = (res, userId) => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: '7d',
+    expiresIn: '1d',
   });
 
   res.cookie('refreshToken', token, {
@@ -18,7 +18,7 @@ exports.generateRefreshTokenAndSetCookie = (res, userId) => {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     //sameSite: 'Lax'
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 1 * 24 * 60 * 60 * 1000,
   });
 
   return token;
