@@ -7,7 +7,7 @@ const { validate } = require('../middlewares/validate');
 const router = express.Router();
 
 // Lấy danh sách tất cả khách hàng
-router.get('/', ClientController.getAllClient);
+router.get('/', ClientController.getAllClients);
 
 // Lấy hồ sơ khách hàng theo ID
 router.get(

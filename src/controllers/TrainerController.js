@@ -1,4 +1,10 @@
-const { User, TrainerDetails } = require('../models');
+const {
+  User,
+  TrainerDetails,
+  WorkoutPlans,
+  ClientDetails,
+  Sessions,
+} = require('../models');
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const { generateRefreshTokenAndSetCookie } = require('../utils/generateToken');
@@ -52,39 +58,76 @@ class TrainerController {
   async getTrainerById(req, res) {
     try {
       const { id } = req.params;
+
       const trainer = await User.findOne({
-        where: { id },
-        attributes: ['id', 'username', 'email', 'role', 'phone', 'bio'],
+        where: { id, role: 'trainer' },
+        attributes: [
+          'id',
+          'username',
+          'email',
+          'phone',
+          'bio',
+          'age',
+          'gender',
+          'date_of_birth',
+          'avatar_url',
+        ],
         include: [
           {
             model: TrainerDetails,
             as: 'trainerDetails',
-            attributes: ['specialties', 'available_slots'],
-            required: true,
+            attributes: [
+              'specialties',
+              'available_slots',
+              'certification_url',
+              'years_of_experience',
+            ],
           },
         ],
       });
-      res.status(200).json({ trainer });
+
+      if (!trainer) {
+        return res.status(404).json({
+          success: false,
+          message: 'Trainer not found',
+        });
+      }
+
+      res.status(200).json({ success: true, data: trainer });
     } catch (error) {
       console.error('Error fetching trainer profile:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
-
-  async getAllTrains(req, res) {
+  async getAllTrainers(req, res) {
     try {
       const trainers = await TrainerDetails.findAll({
-        attributes: ['id', 'specialties', 'available_slots'],
+        attributes: [
+          'id',
+          'specialties',
+          'available_slots',
+          'certification_url',
+          'years_of_experience',
+        ],
         include: [
           {
             model: User,
             as: 'userTrainerDetails',
-            attributes: ['username', 'email', 'phone', 'bio'],
-            required: true,
+            attributes: [
+              'username',
+              'email',
+              'phone',
+              'bio',
+              'age',
+              'gender',
+              'date_of_birth',
+              'avatar_url',
+            ],
           },
         ],
       });
-      res.status(200).json({ message: 'All Trainers', trainers });
+
+      res.status(200).json({ success: true, data: trainers });
     } catch (error) {
       console.error('Error fetching all trainers:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -98,51 +141,49 @@ class TrainerController {
         date_of_birth,
         phone,
         bio,
+        age,
+        gender,
         specialties,
         available_slots,
         avatar_url,
       } = req.body;
 
-      const trainer = await User.findOne({
-        where: { id: userId },
-      });
+      const trainer = await User.findByPk(userId);
       if (!trainer) {
-        return res.status(404).json({
-          success: false,
-          message: 'Trainer not found',
-        });
+        return res.status(404).json({ success: false, message: 'Trainer not found' });
       }
-      await trainer.update({ username, date_of_birth, phone, bio, avatar_url });
-      const TrainerDetails = await ClientDetails.findOne({
-        where: { trainer_id: userId },
+
+      // Cập nhật thông tin User
+      await trainer.update({
+        username,
+        date_of_birth,
+        phone,
+        bio,
+        age,
+        gender,
+        avatar_url,
       });
-      if (TrainerDetails) {
-        await TrainerDetails.update({
-          specialties,
-          available_slots,
-        });
-      } else {
-        await TrainerDetails.create({
-          trainer_id: userId,
-          specialties,
-          available_slots,
-        });
-      }
+
+      // Sử dụng upsert để cập nhật hoặc tạo TrainerDetails
+      await TrainerDetails.upsert({
+        trainer_id: userId,
+        specialties,
+        available_slots,
+      });
 
       res.status(200).json({
         success: true,
-        message: 'Profile updated successfully',
+        message: 'Trainer profile updated successfully',
       });
     } catch (error) {
-      console.error('Error updating client profile:', error);
-      res.status(500).json({ success: false, error: 'Internal Server Error' });
+      console.error('Error updating trainer profile:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   }
-
   async deleteTrainer(req, res) {
     try {
-      const { adminId } = req.user; // Lấy thông tin Admin từ token
-      const { userId } = req.params; // ID của Trainer cần xóa
+      const { adminId } = req.user; 
+      const { userId } = req.params; 
       const admin = await User.findByPk(adminId);
       if (!admin) {
         return res.status(403).json({
@@ -178,31 +219,49 @@ class TrainerController {
   async getTrainerByUsername(req, res) {
     try {
       const { username } = req.query;
-
+  
       if (!username) {
         return res.status(400).json({
           success: false,
           message: 'Username is required',
         });
       }
+  
+      // Tìm trainer theo username
       const trainer = await User.findOne({
         where: { username, role: 'trainer' },
+        attributes: [
+          'id',
+          'username',
+          'email',
+          'phone',
+          'bio',
+          'avatar_url',
+          'age',
+          'gender',
+          'date_of_birth',
+        ],
         include: [
           {
             model: TrainerDetails,
             as: 'trainerDetails',
-            attributes: ['specialties', 'available_slots', 'certification_url', 'years_of_experience'],
+            attributes: [
+              'specialties',
+              'available_slots',
+              'certification_url',
+              'years_of_experience',
+            ],
           },
         ],
-        attributes: ['id', 'username', 'email', 'phone', 'bio', 'avatar_url'],
       });
+  
       if (!trainer) {
         return res.status(404).json({
           success: false,
           message: 'Trainer not found',
         });
       }
-
+  
       res.status(200).json({
         success: true,
         message: 'Trainer found',
@@ -226,6 +285,7 @@ class TrainerController {
           message: 'Specialties is required',
         });
       }
+
       const trainers = await User.findAll({
         where: { role: 'trainer' },
         include: [
@@ -233,47 +293,56 @@ class TrainerController {
             model: TrainerDetails,
             as: 'trainerDetails',
             where: { specialties: { [Op.like]: `%${specialties}%` } },
-            attributes: ['specialties', 'available_slots', 'certification_url', 'years_of_experience'],
+            attributes: [
+              'specialties',
+              'available_slots',
+              'certification_url',
+              'years_of_experience',
+            ],
           },
         ],
-        attributes: ['id', 'username', 'email', 'phone', 'bio', 'avatar_url'],
+        attributes: [
+          'id',
+          'username',
+          'email',
+          'phone',
+          'bio',
+          'age',
+          'gender',
+          'date_of_birth',
+          'avatar_url',
+        ],
       });
 
-      if (trainers.length === 0) {
+      if (!trainers.length) {
         return res.status(404).json({
           success: false,
           message: 'No trainers found for the given specialties',
         });
       }
-      res.status(200).json({
-        success: true,
-        message: 'Trainers found',
-        data: trainers,
-      });
+
+      res.status(200).json({ success: true, data: trainers });
     } catch (error) {
       console.error('Error searching trainers by specialties:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Internal Server Error',
-      });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   }
   async getClientProgress(req, res) {
     try {
       const { trainer_id, client_id } = req.query;
-  
+
       const totalSessions = await Sessions.count({
-        where: { trainerId:trainer_id, clientId: client_id },
+        where: { trainerId: trainer_id, clientId: client_id },
       });
-  
+
       const completedSessions = await Sessions.count({
         where: {
-          trainerId:trainer_id ,
-          clientId: client_id ,
+          trainerId: trainer_id,
+          clientId: client_id,
           status: 'completed',
         },
       });
-  
+
       const cancelledSessions = await Sessions.findAll({
         where: {
           trainer_id: trainerId,
@@ -282,7 +351,7 @@ class TrainerController {
         },
         attributes: ['incomplete_reason'],
       });
-  
+
       res.status(200).json({
         totalSessions,
         completedSessions,
@@ -297,12 +366,12 @@ class TrainerController {
   async getClientHealthStats(req, res) {
     try {
       const { client_id } = req.query;
-  
+
       const healthData = await ClientDetails.findOne({
         where: { clientId: client_id },
         attributes: ['height', 'weight', 'physical_condition', 'updatedAt'],
       });
-  
+
       res.status(200).json({ healthData });
     } catch (error) {
       console.error('Error fetching client health stats:', error);
@@ -312,7 +381,7 @@ class TrainerController {
   async getClientWorkoutPlans(req, res) {
     try {
       const { client_id } = req.query;
-  
+
       const workoutPlans = await WorkoutPlans.findAll({
         where: { clientId: client_id },
         attributes: ['week_number', 'description', 'summary_generated'],
@@ -327,7 +396,7 @@ class TrainerController {
           },
         ],
       });
-  
+
       res.status(200).json({ workoutPlans });
     } catch (error) {
       console.error('Error fetching client workout plans:', error);
@@ -337,12 +406,12 @@ class TrainerController {
   async getClientReviews(req, res) {
     try {
       const { trainer_id, client_id } = req.query;
-  
+
       const reviews = await Reviews.findAll({
-        where: {  trainerId : trainer_id,  clientId: client_id },
+        where: { trainerId: trainer_id, clientId: client_id },
         attributes: ['rating', 'comment', 'createdAt'],
       });
-  
+
       res.status(200).json({ reviews });
     } catch (error) {
       console.error('Error fetching client reviews:', error);

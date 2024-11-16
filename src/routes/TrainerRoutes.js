@@ -12,7 +12,7 @@ router.post(
   TrainerController.register
 );
 
-router.get('/', TrainerController.getAllTrains);
+router.get('/', TrainerController.getAllTrainers);
 
 router.get(
   '/:id',

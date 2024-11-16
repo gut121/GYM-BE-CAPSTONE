@@ -15,7 +15,8 @@ const {
   WorkoutPlansRoutes,
   MealPlansRoutes,
   ReviewsRoutes,
-  MessagesRoutes
+  MessagesRoutes,
+  PaymentsRoutes,
 } = require('./routes');
 const morgan = require('morgan');
 const { limiter } = require('./utils/rateLimiter');
@@ -37,6 +38,7 @@ app.use('/api/meal-plans', MealPlansRoutes);
 app.use('/api/reviews', ReviewsRoutes);
 app.use('/api/admin', AdminRoutes);
 app.use('/api/messages', MessagesRoutes);
+app.use('/api/payments', PaymentsRoutes);
 
 app.use((req, res, next) => {
   next(createError.NotFound('This route does not exist'));

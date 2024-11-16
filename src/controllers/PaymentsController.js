@@ -3,8 +3,8 @@ const stripe = require('stripe')(
 );
 const { Payments } = require('../models');
 
-const PaymentController = {
-  async createPayment(req, res) {
+const PaymentsController = {
+  async createPaymentStripe(req, res) {
     try {
       const { client_id, trainer_id, amount, payment_method, description } =
         req.body;
@@ -64,6 +64,80 @@ const PaymentController = {
       res.status(500).json({ error: 'Failed to list payments' });
     }
   },
+
+  // Momo Payment
+  async createMoMoPayment(req, res) {
+    try {
+      const { client_id, trainer_id, amount, description } = req.body;
+
+      // Tạo orderId và requestId
+      const orderId = config.partnerCode + new Date().getTime();
+      const requestId = orderId;
+
+      // Chuẩn bị rawSignature
+      const rawSignature = `accessKey=${config.accessKey}&amount=${amount}&extraData=${config.extraData}&ipnUrl=${config.ipnUrl}&orderId=${orderId}&orderInfo=${config.orderInfo}&partnerCode=${config.partnerCode}&redirectUrl=${config.redirectUrl}&requestId=${requestId}&requestType=${config.requestType}`;
+      const signature = crypto
+        .createHmac('sha256', config.secretKey)
+        .update(rawSignature)
+        .digest('hex');
+
+      // Tạo requestBody
+      const requestBody = {
+        partnerCode: config.partnerCode,
+        partnerName: 'MoMoTest',
+        storeId: 'MomoStore',
+        requestId: requestId,
+        amount: amount,
+        orderId: orderId,
+        orderInfo: config.orderInfo,
+        redirectUrl: config.redirectUrl,
+        ipnUrl: config.ipnUrl,
+        lang: config.lang,
+        requestType: config.requestType,
+        autoCapture: config.autoCapture,
+        extraData: config.extraData,
+        orderGroupId: config.orderGroupId,
+        signature: signature,
+      };
+
+      // Gửi request đến MoMo
+      const momoResponse = await axios.post(
+        'https://test-payment.momo.vn/v2/gateway/api/create',
+        requestBody,
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+
+      if (momoResponse.data.resultCode === 0) {
+        // Lưu giao dịch vào cơ sở dữ liệu
+        const payment = await Payments.create({
+          client_id,
+          trainer_id,
+          amount,
+          total_amount: amount,
+          payment_method: 'MoMo',
+          transaction_id: momoResponse.data.transId,
+          payment_date: new Date(),
+          description,
+        });
+
+        res.status(201).json({
+          message: 'MoMo payment created successfully',
+          payment,
+          payUrl: momoResponse.data.payUrl, // URL để người dùng thanh toán
+        });
+      } else {
+        res.status(400).json({
+          message: 'Failed to create MoMo payment',
+          details: momoResponse.data,
+        });
+      }
+    } catch (error) {
+      console.error('Error creating MoMo payment:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
 };
 
-module.exports = PaymentController;
+module.exports = PaymentsController;
