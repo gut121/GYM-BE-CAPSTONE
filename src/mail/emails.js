@@ -2,6 +2,8 @@ const {
   VERIFICATION_EMAIL_TEMPLATE,
   PASSWORD_RESET_REQUEST_TEMPLATE,
   PASSWORD_RESET_SUCCESS_TEMPLATE,
+  WEEKLY_SUMMARY_TEMPLATE,
+  SESSION_REMINDER_TEMPLATE
 } = require('./emailTemplate');
 const { transporter } = require('../config/mail');
 
