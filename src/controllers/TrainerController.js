@@ -327,6 +327,7 @@ class TrainerController {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+  //
   async getClientProgress(req, res) {
     try {
       const { trainer_id, client_id } = req.query;
@@ -363,22 +364,59 @@ class TrainerController {
       res.status(500).json({ error: 'Error fetching client progress' });
     }
   }
+
+  // Thống kê sức khỏe người dùng
   async getClientHealthStats(req, res) {
     try {
       const { client_id } = req.query;
-
-      const healthData = await ClientDetails.findOne({
-        where: { clientId: client_id },
+  
+      // Lấy bản ghi hiện tại (mới nhất)
+      const currentHealth = await ClientDetails.findOne({
+        where: { client_id },
         attributes: ['height', 'weight', 'physical_condition', 'updatedAt'],
       });
-
-      res.status(200).json({ healthData });
+  
+      if (!currentHealth) {
+        return res.status(404).json({
+          success: false,
+          message: 'Client health data not found',
+        });
+      }
+  
+      // Lấy bản ghi đầu tiên (cũ nhất) theo updatedAt ASC
+      const initialHealth = await ClientDetails.findOne({
+        where: { client_id },
+        attributes: ['height', 'weight', 'updatedAt'],
+        order: [['updatedAt', 'ASC']],
+      });
+  
+      // Tính toán sự thay đổi cân nặng và chiều cao
+      const weightDifference =
+        currentHealth.weight - (initialHealth?.weight || currentHealth.weight);
+  
+      const heightDifference =
+        currentHealth.height - (initialHealth?.height || currentHealth.height);
+  
+      res.status(200).json({
+        success: true,
+        data: {
+          current_height: currentHealth.height,
+          initial_height: initialHealth?.height || 'Not recorded',
+          height_difference: heightDifference,
+          current_weight: currentHealth.weight,
+          initial_weight: initialHealth?.weight || 'Not recorded',
+          weight_difference: weightDifference,
+          physical_condition: currentHealth.physical_condition,
+          last_updated: currentHealth.updatedAt,
+          initial_updated: initialHealth?.updatedAt || currentHealth.updatedAt,
+        },
+      });
     } catch (error) {
       console.error('Error fetching client health stats:', error);
-      res.status(500).json({ error: 'Error fetching client health stats' });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   }
-  async getClientWorkoutPlans(req, res) {
+    async getClientWorkoutPlans(req, res) {
     try {
       const { client_id } = req.query;
 
