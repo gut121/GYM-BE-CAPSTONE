@@ -110,7 +110,6 @@ async function sendSessionReminderEmail(email, sessionTime, sessionDate) {
     }
   );
 }
-
 async function sendWeeklyNotificationEmail(email, completedSessions, canceledSessions) {
   return transporter.sendMail(
     {

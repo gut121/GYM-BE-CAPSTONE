@@ -1,4 +1,8 @@
 const { Notifications, User, Sessions } = require('../models');
+const {
+  sendSessionReminderEmail,
+  sendWeeklyNotificationEmail,
+} = require('../mail/emails');
 
 class NotificationsController {
   // Lấy tất cả thông báo của một user

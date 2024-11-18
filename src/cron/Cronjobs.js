@@ -1,11 +1,14 @@
 const cron = require('node-cron');
 const { Op } = require('sequelize');
-const { WorkoutPlans, Sessions, Notifications, User } = require('../models');
+const { Sessions, Notifications, User } = require('../models');
+const {
+  sendSessionReminderEmail,
+  sendWeeklyNotificationEmail,
+} = require('../mail/emails');
 const {
   sendWeeklyNotificationEmail,
   sendSessionReminderEmail,
 } = require('../mail/emails');
-const { transporter } = require('../config/mail');
 
 // Cron job: Gửi nhắc nhở trước mỗi buổi tập (chạy mỗi 10 phút)
 cron.schedule('*/10 * * * *', async () => {
@@ -38,7 +41,11 @@ cron.schedule('*/10 * * * *', async () => {
       const formattedDate = session_date.toLocaleDateString();
 
       // Gửi email nhắc nhở
-      await sendSessionReminderEmail(client.email, formattedTime, formattedDate);
+      await sendSessionReminderEmail(
+        client.email,
+        formattedTime,
+        formattedDate
+      );
 
       // Gửi thông báo
       await Notifications.create({
@@ -97,7 +104,11 @@ cron.schedule('0 18 * * 0', async () => {
       const content = `Tổng kết tuần: Bạn đã hoàn thành ${completedSessions} buổi tập và hủy ${canceledSessions} buổi. Hãy tiếp tục nỗ lực để đạt kết quả tốt nhất!`;
 
       // Gửi email tổng kết tuần
-      await sendWeeklyNotificationEmail(user.email, completedSessions, canceledSessions);
+      await sendWeeklyNotificationEmail(
+        user.email,
+        completedSessions,
+        canceledSessions
+      );
 
       console.log(`Đã gửi tổng kết tuần cho khách hàng ${user.username}.`);
     }
