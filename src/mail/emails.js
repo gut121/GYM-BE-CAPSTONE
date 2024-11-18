@@ -89,30 +89,44 @@ async function sendResetSuccessEmail(email) {
     }
   );
 }
-async function sendSessionReminderEmail(email, content) {
-  return sendEmail({
-    to: email,
-    subject: 'Nhắc nhở buổi tập sắp diễn ra',
-    html: `<p>${content}</p>`,
-    errorMsg: 'Error sending session reminder email',
-  });
-}
-
-async function sendWeeklyNotificationEmail(email, content) {
-  transporter.sendMail(
+// Hàm gửi email nhắc nhở buổi tập
+async function sendSessionReminderEmail(email, sessionTime, sessionDate) {
+  return transporter.sendMail(
     {
       to: email,
-      subject: 'Thông báo Tổng kết Tuần từ Gym-Cap',
-      html: `<p>${content}</p>`,
+      subject: 'Nhắc nhở buổi tập sắp diễn ra',
+      html: SESSION_REMINDER_TEMPLATE.replace(
+        '{sessionTime}',
+        sessionTime
+      ).replace('{sessionDate}', sessionDate),
     },
     function (error, info) {
       if (error) {
-        console.error('Error sending password reset success email', error);
-        throw new Error(
-          'Error sending password reset success email: ' + error.message
-        );
+        console.error('Error sending session reminder email:', error);
+        throw new Error('Error sending session reminder email: ' + error.message);
       } else {
-        console.log('Password reset success email sent successfully', info);
+        console.log('Session reminder email sent successfully:', info);
+      }
+    }
+  );
+}
+
+async function sendWeeklyNotificationEmail(email, completedSessions, canceledSessions) {
+  return transporter.sendMail(
+    {
+      to: email,
+      subject: 'Thông báo Tổng kết Tuần từ Gym-Cap',
+      html: WEEKLY_SUMMARY_TEMPLATE.replace(
+        '{completedSessions}',
+        completedSessions
+      ).replace('{canceledSessions}', canceledSessions),
+    },
+    function (error, info) {
+      if (error) {
+        console.error('Error sending weekly notification email:', error);
+        throw new Error('Error sending weekly notification email: ' + error.message);
+      } else {
+        console.log('Weekly notification email sent successfully:', info);
       }
     }
   );
