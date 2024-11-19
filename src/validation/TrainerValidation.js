@@ -72,69 +72,6 @@ const TrainerValidation = {
       .withMessage('Years of experience must be a non-negative integer'),
   ],
 
-  deleteTrainer: [
-    param('userId')
-      .notEmpty()
-      .withMessage('User ID is required')
-      .isInt()
-      .withMessage('User ID must be an integer'),
-  ],
-
-  searchTrainersBySpecialties: [
-    query('specialties')
-      .notEmpty()
-      .withMessage('Specialties is required')
-      .isString()
-      .withMessage('Specialties must be a string'),
-  ],
-
-  getTrainerByUsername: [
-    query('username')
-      .notEmpty()
-      .withMessage('Username is required')
-      .isString()
-      .withMessage('Username must be a string'),
-  ],
-  getClientProgress: [
-    query('client_id')
-      .notEmpty()
-      .withMessage('Client ID is required')
-      .isInt()
-      .withMessage('Client ID must be an integer'),
-    query('trainer_id')
-      .notEmpty()
-      .withMessage('Trainer ID is required')
-      .isInt()
-      .withMessage('Trainer ID must be an integer'),
-  ],
-  getClientHealthStats: [
-    query('client_id')
-      .notEmpty()
-      .withMessage('Client ID is required')
-      .isInt()
-      .withMessage('Client ID must be an integer'),
-  ],
-  getClientWorkoutPlans: [
-    query('client_id')
-      .notEmpty()
-      .withMessage('Client ID is required')
-      .isInt()
-      .withMessage('Client ID must be an integer'),
-  ],
-  getClientReviews: [
-    query('client_id')
-      .notEmpty()
-      .withMessage('Client ID is required')
-      .isInt()
-      .withMessage('Client ID must be an integer'),
-    query('trainer_id')
-      .notEmpty()
-      .withMessage('Trainer ID is required')
-      .isInt()
-      .withMessage('Trainer ID must be an integer'),
-  ],
-
-  
 };
 
 module.exports = TrainerValidation;
